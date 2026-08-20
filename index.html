@@ -1,0 +1,2300 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kejohanan Olahraga - Two-Way Sync</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            dark: '#0f172a',
+                            navy: '#1e293b',
+                            blue: '#2563eb',
+                            sky: '#0284c7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'Inter', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .editable-field {
+            transition: all 0.2s ease-in-out;
+            background-color: #ffffff;
+        }
+        .editable-field:focus {
+            outline: 2px solid #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            background-color: #f0f9ff;
+        }
+        .editable-field-female:focus {
+            outline: 2px solid #e11d48;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+            background-color: #fff1f2;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <header class="bg-slate-900 text-white shadow-xl sticky top-0 z-30 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 p-3 rounded-2xl shadow-lg text-white">
+                        <i class="fa-solid fa-trophy text-2xl"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                                Hub Digital
+                            </h1>
+                            <span class="bg-blue-900/80 text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-700">Two-Way Sync</span>
+                        </div>
+                        <p class="text-xs text-emerald-400 font-medium flex items-center gap-1.5 mt-0.5" id="syncStatusSubtitle">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Keputusan Rasmi Kejohanan
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Controls & Live Badge -->
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div id="connectionBadge" class="hidden sm:flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-400">
+                        <i class="fa-solid fa-flask"></i>
+                        <span>Mod Demo</span>
+                    </div>
+
+                    <div id="autoSyncSpinner" class="hidden items-center gap-1.5 text-xs text-blue-400 font-medium bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i>
+                        <span class="hidden md:inline">Menyimpan...</span>
+                    </div>
+
+                    <button onclick="toggleSetupModal()" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-md transition flex items-center gap-2">
+                        <i class="fa-solid fa-plug"></i>
+                        <span class="hidden md:inline">Tetapan Admin</span>
+                    </button>
+                    
+                    <button onclick="fetchDataFromBackend(true)" id="globalRefreshBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 p-2.5 rounded-xl text-sm transition" title="Segarkan Data Google Sheets">
+                        <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-emerald-500 border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] text-emerald-600 font-bold uppercase tracking-wider">Penyegerakan</p>
+                    <p class="text-sm font-bold text-emerald-700 mt-1" id="statSyncText">2-Way Single Cell</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5" id="statLastUpdate">Kemas kini: Baru sahaja</p>
+                </div>
+                <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100">
+                    <i class="fa-solid fa-bolt text-2xl"></i>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-amber-500 border border-slate-200/80 flex items-center justify-between">
+                <div>
+                    <p class="text-[11px] text-amber-600 font-bold uppercase tracking-wider">Pendahulu Ranking</p>
+                    <p class="text-sm font-bold text-slate-800 mt-1" id="statLeader">Garuda (0 Emas)</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Rumah Sukan Terbanyak Emas (Akhir Balapan)</p>
+                </div>
+                <div class="p-3.5 bg-amber-50 text-amber-500 rounded-2xl border border-amber-100">
+                    <i class="fa-solid fa-medal text-2xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-b border-slate-200 mb-6 flex items-center justify-between overflow-x-auto">
+            <nav class="flex space-x-2 pb-1" aria-label="Tabs">
+                <button onclick="switchTab('padang')" id="tabBtn-padang" class="tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    Acara Saringan
+                </button>
+                <button onclick="switchTab('balapan')" id="tabBtn-balapan" class="tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 whitespace-nowrap">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    Akhir Balapan
+                </button>
+                <button onclick="switchTab('relay')" id="tabBtn-relay" class="tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 whitespace-nowrap">
+                    <i class="fa-solid fa-people-group"></i>
+                    Acara Relay
+                </button>
+                <button onclick="switchTab('padang_acara')" id="tabBtn-padang_acara" class="tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 whitespace-nowrap">
+                    <i class="fa-solid fa-person-running"></i>
+                    Acara Padang
+                </button>
+                <button onclick="switchTab('rumusan')" id="tabBtn-rumusan" class="tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 whitespace-nowrap">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Rumusan & Carta Kedudukan
+                </button>
+            </nav>
+            <div class="text-xs text-slate-500 font-medium hidden lg:block whitespace-nowrap pl-2">
+                <i class="fa-solid fa-lock text-slate-400 mr-1"></i> Perlindungan Aktif
+            </div>
+        </div>
+
+        <div id="tabContent-padang" class="space-y-8">
+            <!-- EVENT SELECTOR BAR (101 - 206) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b pb-2">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-ol text-blue-600"></i>
+                        Pilih Acara Saringan :
+                    </span>
+                    <span class="text-xs font-mono font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200" id="currentSaringanSheetBadge">
+                        Sheet: 101
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <div class="flex flex-wrap gap-2 flex-grow">
+                        <button onclick="switchSaringanEvent('101')" id="saringanBtn-101" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs">Acara 101</button>
+                        <button onclick="switchSaringanEvent('102')" id="saringanBtn-102" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 102</button>
+                        <button onclick="switchSaringanEvent('103')" id="saringanBtn-103" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 103</button>
+                        <button onclick="switchSaringanEvent('104')" id="saringanBtn-104" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 104</button>
+                        <button onclick="switchSaringanEvent('105')" id="saringanBtn-105" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 105</button>
+                        <button onclick="switchSaringanEvent('106')" id="saringanBtn-106" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 106</button>
+                        <button onclick="switchSaringanEvent('204')" id="saringanBtn-204" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 204</button>
+                        <button onclick="switchSaringanEvent('205')" id="saringanBtn-205" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 205</button>
+                        <button onclick="switchSaringanEvent('206')" id="saringanBtn-206" class="saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 206</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: KATEGORI LELAKI -->
+            <div class="bg-white rounded-3xl shadow-sm border border-blue-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-blue-500/25 text-blue-200 rounded-xl border border-blue-400/30">
+                            <i class="fa-solid fa-mars text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Lelaki
+                                <span class="text-xs font-semibold bg-blue-500/30 text-blue-200 px-2.5 py-0.5 rounded-full border border-blue-400/30">Acara Saringan</span>
+                            </h2>
+                            <p class="text-xs text-blue-100">Kolom A: Lorong | B&C: Nama | D: Pasukan | E: Bib | <span class="text-amber-300 font-bold">F: Ranking | G: Catatan Masa</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between mb-3 border-b border-blue-100 pb-2">
+                            <h3 class="text-sm font-bold text-blue-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                                Saringan 1 (Lelaki)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="maleS1RangeBadge">Range: A5:G12 | Sunting: F5:G12</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                                <thead class="bg-blue-50/70 border-b border-blue-100 text-blue-950 font-bold uppercase tracking-wider text-[11px]">
+                                    <tr>
+                                        <th class="py-3 px-3 text-center w-16 bg-blue-100/50">Lorong (A)</th>
+                                        <th class="py-3 px-4 min-w-[200px]">Nama Peserta (B & C)</th>
+                                        <th class="py-3 px-3 min-w-[120px]">Pasukan (D)</th>
+                                        <th class="py-3 px-3 text-center w-24">No Bib (E)</th>
+                                        <th class="py-3 px-4 text-center w-28 bg-blue-100/80 text-blue-950 border-x border-blue-200">Ranking (F) <i class="fa-solid fa-pen text-[9px] text-blue-600"></i></th>
+                                        <th class="py-3 px-4 text-center w-36 bg-emerald-100/80 text-emerald-900 border-r border-emerald-200">Catatan Masa (G) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                        <th class="py-3 px-3 text-center w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="saringanMaleS1TableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex items-center justify-between mb-3 border-b border-blue-100 pb-2">
+                            <h3 class="text-sm font-bold text-blue-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                                Saringan 2 (Lelaki)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="maleS2RangeBadge">Range: A18:G25 | Sunting: F18:G25</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                                <thead class="bg-blue-50/70 border-b border-blue-100 text-blue-950 font-bold uppercase tracking-wider text-[11px]">
+                                    <tr>
+                                        <th class="py-3 px-3 text-center w-16 bg-blue-100/50">Lorong (A)</th>
+                                        <th class="py-3 px-4 min-w-[200px]">Nama Peserta (B & C)</th>
+                                        <th class="py-3 px-3 min-w-[120px]">Pasukan (D)</th>
+                                        <th class="py-3 px-3 text-center w-24">No Bib (E)</th>
+                                        <th class="py-3 px-4 text-center w-28 bg-blue-100/80 text-blue-950 border-x border-blue-200">Ranking (F) <i class="fa-solid fa-pen text-[9px] text-blue-600"></i></th>
+                                        <th class="py-3 px-4 text-center w-36 bg-emerald-100/80 text-emerald-900 border-r border-emerald-200">Catatan Masa (G) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                        <th class="py-3 px-3 text-center w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="saringanMaleS2TableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: KATEGORI PEREMPUAN -->
+            <div class="bg-white rounded-3xl shadow-sm border border-rose-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-700 via-pink-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-pink-500/25 text-pink-200 rounded-xl border border-pink-400/30">
+                            <i class="fa-solid fa-venus text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Perempuan
+                                <span class="text-xs font-semibold bg-pink-500/30 text-pink-200 px-2.5 py-0.5 rounded-full border border-pink-400/30">Acara Saringan</span>
+                            </h2>
+                            <p class="text-xs text-rose-100">Kolom I: Lorong | J&K: Nama | L: Pasukan | M: Bib | <span class="text-amber-300 font-bold">N: Ranking | O: Catatan Masa</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between mb-3 border-b border-rose-100 pb-2">
+                            <h3 class="text-sm font-bold text-rose-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+                                Saringan 1 (Perempuan)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="femaleS1RangeBadge">Range: I5:O12 | Sunting: N5:O12</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                                <thead class="bg-rose-50/70 border-b border-rose-100 text-rose-950 font-bold uppercase tracking-wider text-[11px]">
+                                    <tr>
+                                        <th class="py-3 px-3 text-center w-16 bg-rose-100/50">Lorong (I)</th>
+                                        <th class="py-3 px-4 min-w-[200px]">Nama Peserta (J & K)</th>
+                                        <th class="py-3 px-3 min-w-[120px]">Pasukan (L)</th>
+                                        <th class="py-3 px-3 text-center w-24">No Bib (M)</th>
+                                        <th class="py-3 px-4 text-center w-28 bg-rose-100/80 text-rose-950 border-x border-rose-200">Ranking (N) <i class="fa-solid fa-pen text-[9px] text-rose-600"></i></th>
+                                        <th class="py-3 px-4 text-center w-36 bg-emerald-100/80 text-emerald-900 border-r border-emerald-200">Catatan Masa (O) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                        <th class="py-3 px-3 text-center w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="saringanFemaleS1TableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100">
+                        <div class="flex items-center justify-between mb-3 border-b border-rose-100 pb-2">
+                            <h3 class="text-sm font-bold text-rose-900 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-pink-600"></span>
+                                Saringan 2 (Perempuan)
+                            </h3>
+                            <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg" id="femaleS2RangeBadge">Range: I18:O25 | Sunting: N18:O25</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                                <thead class="bg-rose-50/70 border-b border-rose-100 text-rose-950 font-bold uppercase tracking-wider text-[11px]">
+                                    <tr>
+                                        <th class="py-3 px-3 text-center w-16 bg-rose-100/50">Lorong (I)</th>
+                                        <th class="py-3 px-4 min-w-[200px]">Nama Peserta (J & K)</th>
+                                        <th class="py-3 px-3 min-w-[120px]">Pasukan (L)</th>
+                                        <th class="py-3 px-3 text-center w-24">No Bib (M)</th>
+                                        <th class="py-3 px-4 text-center w-28 bg-rose-100/80 text-rose-950 border-x border-rose-200">Ranking (N) <i class="fa-solid fa-pen text-[9px] text-rose-600"></i></th>
+                                        <th class="py-3 px-4 text-center w-36 bg-emerald-100/80 text-emerald-900 border-r border-emerald-200">Catatan Masa (O) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                        <th class="py-3 px-3 text-center w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="saringanFemaleS2TableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabContent-balapan" class="space-y-8 hidden">
+            <!-- EVENT SELECTOR BAR FOR AKHIR BALAPAN (9 SHEETS) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b pb-2">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-flag-checkered text-rose-500"></i>
+                        Pilih Acara Akhir Balapan :
+                    </span>
+                    <span class="text-xs font-mono font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200" id="currentTrackSheetBadge">
+                        Sheet: 101
+                    </span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="font-bold text-slate-500 w-28 text-[11px]">Acara 101-106:</span>
+                        <div class="flex flex-wrap gap-1.5 flex-grow">
+                            <button onclick="switchBalapanEvent('101')" id="balapanBtn-101" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs">101</button>
+                            <button onclick="switchBalapanEvent('102')" id="balapanBtn-102" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">102</button>
+                            <button onclick="switchBalapanEvent('103')" id="balapanBtn-103" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">103</button>
+                            <button onclick="switchBalapanEvent('104')" id="balapanBtn-104" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">104</button>
+                            <button onclick="switchBalapanEvent('105')" id="balapanBtn-105" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">105</button>
+                            <button onclick="switchBalapanEvent('106')" id="balapanBtn-106" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">106</button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-2">
+                        <span class="font-bold text-slate-500 w-28 text-[11px]">Acara 204-206:</span>
+                        <div class="flex flex-wrap gap-1.5 flex-grow">
+                            <button onclick="switchBalapanEvent('204')" id="balapanBtn-204" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">204</button>
+                            <button onclick="switchBalapanEvent('205')" id="balapanBtn-205" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">205</button>
+                            <button onclick="switchBalapanEvent('206')" id="balapanBtn-206" class="balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">206</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-blue-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-700 via-indigo-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-blue-500/25 text-blue-200 rounded-xl border border-blue-400/30">
+                            <i class="fa-solid fa-mars text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Lelaki
+                                <span class="text-xs font-semibold bg-blue-500/30 text-blue-200 px-2.5 py-0.5 rounded-full border border-blue-400/30">Akhir Balapan</span>
+                            </h2>
+                            <p class="text-xs text-blue-100" id="balapanMaleRangeSubtitle">Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A6:G13</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead id="balapanMaleThead" class="bg-blue-50/70 border-b border-blue-100 text-blue-950 font-bold uppercase tracking-wider text-[11px]"></thead>
+                        <tbody id="balapanMaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-rose-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-700 via-pink-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-pink-500/25 text-pink-200 rounded-xl border border-pink-400/30">
+                            <i class="fa-solid fa-venus text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Perempuan
+                                <span class="text-xs font-semibold bg-pink-500/30 text-pink-200 px-2.5 py-0.5 rounded-full border border-pink-400/30">Akhir Balapan</span>
+                            </h2>
+                            <p class="text-xs text-rose-100" id="balapanFemaleRangeSubtitle">Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A20:G27</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead id="balapanFemaleThead" class="bg-rose-50/70 border-b border-rose-100 text-rose-950 font-bold uppercase tracking-wider text-[11px]"></thead>
+                        <tbody id="balapanFemaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabContent-relay" class="space-y-8 hidden">
+            <!-- EVENT SELECTOR BAR FOR ACARA RELAY (5 SHEETS) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b pb-2">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-people-group text-purple-600"></i>
+                        Pilih Acara Relay (Berpautan) :
+                    </span>
+                    <span class="text-xs font-mono font-bold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-200" id="currentRelaySheetBadge">
+                        Sheet: 411
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <div class="flex flex-wrap gap-2 flex-grow">
+                        <button onclick="switchRelayEvent('411')" id="relayBtn-411" class="relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs">Acara 411</button>
+                        <button onclick="switchRelayEvent('414')" id="relayBtn-414" class="relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 414</button>
+                        <button onclick="switchRelayEvent('415')" id="relayBtn-415" class="relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 415</button>
+                        <button onclick="switchRelayEvent('424')" id="relayBtn-424" class="relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 424</button>
+                        <button onclick="switchRelayEvent('425')" id="relayBtn-425" class="relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Acara 425</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACARA RELAY: LELAKI -->
+            <div class="bg-white rounded-3xl shadow-sm border border-purple-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-purple-700 via-indigo-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-purple-500/25 text-purple-200 rounded-xl border border-purple-400/30">
+                            <i class="fa-solid fa-mars text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Lelaki
+                                <span class="text-xs font-semibold bg-purple-500/30 text-purple-200 px-2.5 py-0.5 rounded-full border border-purple-400/30">Acara Relay</span>
+                            </h2>
+                            <p class="text-xs text-purple-100">Range: <span class="font-mono text-amber-300 font-bold">A5:F8</span> | Kolom A: Lorong | B&C: Pasukan | <span class="text-emerald-300 font-bold">D&E: Masa (Sunting)</span> | <span class="text-amber-300 font-bold">F: Kedudukan (Sunting)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead class="bg-purple-50/70 border-b border-purple-100 text-purple-950 font-bold uppercase tracking-wider text-[11px]">
+                            <tr>
+                                <th class="py-3 px-3 text-center w-20 bg-purple-100/50">Lorong (A)</th>
+                                <th class="py-3 px-4 min-w-[220px]">Pasukan (B & C)</th>
+                                <th class="py-3 px-4 text-center w-40 bg-emerald-100/80 text-emerald-900 border-x border-emerald-200">Catatan Masa (D & E) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                <th class="py-3 px-4 text-center w-32 bg-purple-100/80 text-purple-950 border-r border-purple-200">Kedudukan (F) <i class="fa-solid fa-pen text-[9px] text-purple-600"></i></th>
+                                <th class="py-3 px-3 text-center w-24">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="relayMaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ACARA RELAY: PEREMPUAN -->
+            <div class="bg-white rounded-3xl shadow-sm border border-rose-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-700 via-pink-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-pink-500/25 text-pink-200 rounded-xl border border-pink-400/30">
+                            <i class="fa-solid fa-venus text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Perempuan
+                                <span class="text-xs font-semibold bg-pink-500/30 text-pink-200 px-2.5 py-0.5 rounded-full border border-pink-400/30">Acara Relay</span>
+                            </h2>
+                            <p class="text-xs text-rose-100">Range: <span class="font-mono text-amber-300 font-bold">I5:N8</span> | Kolom I: Lorong | J&K: Pasukan | <span class="text-emerald-300 font-bold">L&M: Masa (Sunting)</span> | <span class="text-amber-300 font-bold">N: Kedudukan (Sunting)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead class="bg-rose-50/70 border-b border-rose-100 text-rose-950 font-bold uppercase tracking-wider text-[11px]">
+                            <tr>
+                                <th class="py-3 px-3 text-center w-20 bg-rose-100/50">Lorong (I)</th>
+                                <th class="py-3 px-4 min-w-[220px]">Pasukan (J & K)</th>
+                                <th class="py-3 px-4 text-center w-40 bg-emerald-100/80 text-emerald-900 border-x border-emerald-200">Catatan Masa (L & M) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                <th class="py-3 px-4 text-center w-32 bg-rose-100/80 text-rose-950 border-r border-rose-200">Kedudukan (N) <i class="fa-solid fa-pen text-[9px] text-rose-600"></i></th>
+                                <th class="py-3 px-3 text-center w-24">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="relayFemaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabContent-padang_acara" class="space-y-8 hidden">
+            <!-- EVENT SELECTOR BAR FOR ACARA PADANG (3 SHEETS) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div class="flex items-center justify-between border-b pb-2">
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-person-running text-emerald-600"></i>
+                        Pilih Acara Padang :
+                    </span>
+                    <span class="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200" id="currentPadangAcaraSheetBadge">
+                        Sheet: LOMPAT JAUH
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <div class="flex flex-wrap gap-2 flex-grow">
+                        <button onclick="switchPadangAcaraEvent('LOMPAT JAUH')" id="padangAcaraBtn-LOMPAT JAUH" class="padang-acara-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs">Lompat Jauh</button>
+                        <button onclick="switchPadangAcaraEvent('LOMPAT TINGGI')" id="padangAcaraBtn-LOMPAT TINGGI" class="padang-acara-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Lompat Tinggi</button>
+                        <button onclick="switchPadangAcaraEvent('LONTAR PELURU')" id="padangAcaraBtn-LONTAR PELURU" class="padang-acara-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">Lontar Peluru</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACARA PADANG: LELAKI -->
+            <div class="bg-white rounded-3xl shadow-sm border border-emerald-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-700 via-teal-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-emerald-500/25 text-emerald-200 rounded-xl border border-emerald-400/30">
+                            <i class="fa-solid fa-mars text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Lelaki
+                                <span class="text-xs font-semibold bg-emerald-500/30 text-emerald-200 px-2.5 py-0.5 rounded-full border border-emerald-400/30">Acara Padang</span>
+                            </h2>
+                            <p class="text-xs text-emerald-100">Range: <span class="font-mono text-amber-300 font-bold">A9:M16</span> | Kolom A: Giliran | B&C: Nama | D: Pasukan | E: Bib | F-K: Percubaan (1-6) | <span class="text-amber-300 font-bold">L: Terbaik (Sunting)</span> | <span class="text-cyan-300 font-bold">M: Kedudukan (Sunting)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead class="bg-emerald-50/70 border-b border-emerald-100 text-emerald-950 font-bold uppercase tracking-wider text-[11px]">
+                            <tr>
+                                <th class="py-3 px-2 text-center w-12 bg-emerald-100/50">Gil (A)</th>
+                                <th class="py-3 px-3 min-w-[180px]">Nama (B & C)</th>
+                                <th class="py-3 px-2 min-w-[100px]">Pasukan (D)</th>
+                                <th class="py-3 px-2 text-center w-16">Bib (E)</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P1</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P2</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P3</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P4</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P5</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P6</th>
+                                <th class="py-3 px-3 text-center w-28 bg-amber-100/80 text-amber-950 border-x border-amber-200">Terbaik (L) <i class="fa-solid fa-pen text-[9px] text-amber-600"></i></th>
+                                <th class="py-3 px-3 text-center w-24 bg-emerald-100/80 text-emerald-950 border-r border-emerald-200">Kedudukan (M) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                                <th class="py-3 px-2 text-center w-20">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="padangAcaraMaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ACARA PADANG: PEREMPUAN -->
+            <div class="bg-white rounded-3xl shadow-sm border border-rose-200 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-700 via-pink-800 to-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 bg-pink-500/25 text-pink-200 rounded-xl border border-pink-400/30">
+                            <i class="fa-solid fa-venus text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                                Kategori Perempuan
+                                <span class="text-xs font-semibold bg-pink-500/30 text-pink-200 px-2.5 py-0.5 rounded-full border border-pink-400/30">Acara Padang</span>
+                            </h2>
+                            <p class="text-xs text-rose-100">Range: <span class="font-mono text-amber-300 font-bold">A26:M33</span> | Kolom A: Giliran | B&C: Nama | D: Pasukan | E: Bib | F-K: Percubaan (1-6) | <span class="text-amber-300 font-bold">L: Terbaik (Sunting)</span> | <span class="text-cyan-300 font-bold">M: Kedudukan (Sunting)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto p-4">
+                    <table class="w-full text-left text-xs text-slate-700 whitespace-nowrap">
+                        <thead class="bg-rose-50/70 border-b border-rose-100 text-rose-950 font-bold uppercase tracking-wider text-[11px]">
+                            <tr>
+                                <th class="py-3 px-2 text-center w-12 bg-rose-100/50">Gil (A)</th>
+                                <th class="py-3 px-3 min-w-[180px]">Nama (B & C)</th>
+                                <th class="py-3 px-2 min-w-[100px]">Pasukan (D)</th>
+                                <th class="py-3 px-2 text-center w-16">Bib (E)</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P1</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P2</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P3</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P4</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P5</th>
+                                <th class="py-3 px-2 text-center w-12 bg-slate-100/60">P6</th>
+                                <th class="py-3 px-3 text-center w-28 bg-amber-100/80 text-amber-950 border-x border-amber-200">Terbaik (L) <i class="fa-solid fa-pen text-[9px] text-amber-600"></i></th>
+                                <th class="py-3 px-3 text-center w-24 bg-rose-100/80 text-rose-950 border-r border-rose-200">Kedudukan (M) <i class="fa-solid fa-pen text-[9px] text-rose-600"></i></th>
+                                <th class="py-3 px-2 text-center w-20">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="padangAcaraFemaleTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="tabContent-rumusan" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-award text-amber-500"></i>
+                    Rumusan Kedudukan Pingat & Pasukan (Akhir Balapan)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="houseStatsGrid"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md"></div>
+
+    <div id="setupModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-slate-100">
+            <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-xl">
+                        <i class="fa-solid fa-code text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Tetapan Pengurusan Data</h3>
+                        <p class="text-xs text-slate-400">Update Data via Apps Script Engine</p>
+                    </div>
+                </div>
+                <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-white text-lg p-2 rounded-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto flex-grow space-y-6 text-sm">
+
+                <!-- Web App URL Config Section 1: Acara Saringan -->
+                <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-stopwatch text-blue-600"></i>
+                            Google Apps Script Web App URL - Acara Saringan
+                        </label>
+                        <span id="badgePadangUrlStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Belum Disimpan</span>
+                    </div>
+                    
+                    <div class="flex flex-col lg:flex-row gap-2">
+                        <input type="url" id="webAppUrlPadangInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+                        
+                        <div class="flex flex-wrap gap-1.5 items-center">
+                            <button onclick="testApiUrl('padang')" title="Uji Sambungan Saringan" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-vial"></i> <span>Uji Sambungan</span>
+                            </button>
+                            <button onclick="saveApiUrl('padang')" title="Simpan URL Saringan" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>
+                            </button>
+                            <button onclick="editApiUrl('padang')" title="Edit URL Saringan" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                            </button>
+                            <button onclick="deleteApiUrl('padang')" title="Hapus URL Saringan" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-trash"></i> <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="testUrlResultPadang" class="hidden text-xs p-3 rounded-xl font-mono"></div>
+                </div>
+
+                <!-- Web App URL Config Section 2: Akhir Balapan -->
+                <div class="bg-rose-50/70 border border-rose-200 rounded-2xl p-4 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-flag-checkered text-rose-600"></i>
+                            Google Apps Script Web App URL - Akhir Balapan
+                        </label>
+                        <span id="badgeBalapanUrlStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Belum Disimpan</span>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-2">
+                        <input type="url" id="webAppUrlBalapanInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none font-mono">
+                        
+                        <div class="flex flex-wrap gap-1.5 items-center">
+                            <button onclick="testApiUrl('balapan')" title="Uji Sambungan Akhir Balapan" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-vial"></i> <span>Uji Sambungan</span>
+                            </button>
+                            <button onclick="saveApiUrl('balapan')" title="Simpan URL Akhir Balapan" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>
+                            </button>
+                            <button onclick="editApiUrl('balapan')" title="Edit URL Akhir Balapan" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                            </button>
+                            <button onclick="deleteApiUrl('balapan')" title="Hapus URL Akhir Balapan" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-trash"></i> <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="testUrlResultBalapan" class="hidden text-xs p-3 rounded-xl font-mono"></div>
+                </div>
+
+                <!-- Web App URL Config Section 3: Acara Relay -->
+                <div class="bg-purple-50/70 border border-purple-200 rounded-2xl p-4 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-purple-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-people-group text-purple-600"></i>
+                            Google Apps Script Web App URL - Acara Relay
+                        </label>
+                        <span id="badgeRelayUrlStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Belum Disimpan</span>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-2">
+                        <input type="url" id="webAppUrlRelayInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none font-mono">
+                        
+                        <div class="flex flex-wrap gap-1.5 items-center">
+                            <button onclick="testApiUrl('relay')" title="Uji Sambungan Acara Relay" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-vial"></i> <span>Uji Sambungan</span>
+                            </button>
+                            <button onclick="saveApiUrl('relay')" title="Simpan URL Acara Relay" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>
+                            </button>
+                            <button onclick="editApiUrl('relay')" title="Edit URL Acara Relay" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                            </button>
+                            <button onclick="deleteApiUrl('relay')" title="Hapus URL Acara Relay" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-trash"></i> <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="testUrlResultRelay" class="hidden text-xs p-3 rounded-xl font-mono"></div>
+                </div>
+
+                <!-- Web App URL Config Section 4: Acara Padang -->
+                <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-person-running text-emerald-600"></i>
+                            Google Apps Script Web App URL - Acara Padang
+                        </label>
+                        <span id="badgePadangAcaraUrlStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Belum Disimpan</span>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row gap-2">
+                        <input type="url" id="webAppUrlPadangAcaraInput" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono">
+                        
+                        <div class="flex flex-wrap gap-1.5 items-center">
+                            <button onclick="testApiUrl('padang_acara')" title="Uji Sambungan Acara Padang" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-vial"></i> <span>Uji Sambungan</span>
+                            </button>
+                            <button onclick="saveApiUrl('padang_acara')" title="Simpan URL Acara Padang" class="bg-slate-900 hover:bg-slate-800 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-floppy-disk"></i> <span>Simpan</span>
+                            </button>
+                            <button onclick="editApiUrl('padang_acara')" title="Edit URL Acara Padang" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                            </button>
+                            <button onclick="deleteApiUrl('padang_acara')" title="Hapus URL Acara Padang" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-semibold transition shadow-xs flex items-center gap-1">
+                                <i class="fa-solid fa-trash"></i> <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="testUrlResultPadangAcara" class="hidden text-xs p-3 rounded-xl font-mono"></div>
+                </div>
+
+                <p class="text-xs text-slate-500 px-1">
+                    <i class="fa-solid fa-circle-info text-blue-500"></i> Biarkan URL kosong jika ingin menjalankan aplikasi dalam Mod <b>(Belum Aktif)</b>.
+                </p>
+
+                <!-- Code Section 1: Acara Saringan -->
+                <div class="border-t border-slate-200 pt-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-stopwatch text-blue-600"></i>
+                            Kod Google Apps Script (`Code.gs`) - Acara Saringan
+                        </h4>
+                        <button onclick="copyGasCode('padang')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-copy text-slate-700"></i> Salin Kod Saringan
+                        </button>
+                    </div>
+                    <pre class="bg-slate-800 text-slate-200 p-4 rounded-2xl text-xs overflow-x-auto max-h-56 font-mono leading-relaxed" id="gasCodeBlockPadang"></pre>
+                </div>
+
+                <!-- Code Section 2: Akhir Balapan -->
+                <div class="border-t border-slate-200 pt-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-flag-checkered text-rose-600"></i>
+                            Kod Google Apps Script (`Code.gs`) - Akhir Balapan (9 Sheet)
+                        </h4>
+                        <button onclick="copyGasCode('balapan')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-copy text-slate-700"></i> Salin Kod Akhir Balapan
+                        </button>
+                    </div>
+                    <pre class="bg-slate-800 text-slate-200 p-4 rounded-2xl text-xs overflow-x-auto max-h-56 font-mono leading-relaxed" id="gasCodeBlockBalapan"></pre>
+                </div>
+
+                <!-- Code Section 3: Acara Relay -->
+                <div class="border-t border-slate-200 pt-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-people-group text-purple-600"></i>
+                            Kod Google Apps Script (`Code.gs`) - Acara Relay (5 Sheet: 411,414,415,424,425)
+                        </h4>
+                        <button onclick="copyGasCode('relay')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-copy text-slate-700"></i> Salin Kod Acara Relay
+                        </button>
+                    </div>
+                    <pre class="bg-slate-800 text-slate-200 p-4 rounded-2xl text-xs overflow-x-auto max-h-56 font-mono leading-relaxed" id="gasCodeBlockRelay"></pre>
+                </div>
+
+                <!-- Code Section 4: Acara Padang -->
+                <div class="border-t border-slate-200 pt-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-person-running text-emerald-600"></i>
+                            Kod Google Apps Script (`Code.gs`) - Acara Padang (3 Sheet)
+                        </h4>
+                        <button onclick="copyGasCode('padang_acara')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-copy text-slate-700"></i> Salin Kod Acara Padang
+                        </button>
+                    </div>
+                    <pre class="bg-slate-800 text-slate-200 p-4 rounded-2xl text-xs overflow-x-auto max-h-56 font-mono leading-relaxed" id="gasCodeBlockPadangAcara"></pre>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let webAppUrlPadang = localStorage.getItem('sports_webapp_url_padang') || localStorage.getItem('sports_webapp_url_v2') || '';
+        let webAppUrlBalapan = localStorage.getItem('sports_webapp_url_balapan') || '';
+        let webAppUrlRelay = localStorage.getItem('sports_webapp_url_relay') || '';
+        let webAppUrlPadangAcara = localStorage.getItem('sports_webapp_url_padang_acara') || '';
+
+        let pendingSaveCount = 0;
+        let consecutiveFetchFailures = 0;
+
+        let currentMainTab = 'padang'; 
+        let currentSaringanEvent = '101'; // 9 sheets
+        let currentBalapanEvent = '101';  // 9 sheets
+        let currentRelayEvent = '411';     // 5 sheets: 411, 414, 415, 424, 425
+        let currentPadangAcaraEvent = 'LOMPAT JAUH'; // 3 sheets: LOMPAT JAUH, LOMPAT TINGGI, LONTAR PELURU
+
+        const SARINGAN_SHEETS = ['101', '102', '103', '104', '105', '106', '204', '205', '206'];
+        const AKHIR_SHEETS = ['101', '102', '103', '104', '105', '106', '204', '205', '206'];
+        const RELAY_SHEETS = ['411', '414', '415', '424', '425'];
+        const PADANG_ACARA_SHEETS = ['LOMPAT JAUH', 'LOMPAT TINGGI', 'LONTAR PELURU'];
+
+        const GAS_CODE_PADANG = `// =========================================================================
+// GOOGLE APPS SCRIPT - ACARA SARINGAN (9 TAB SHEET)
+// Tab: 101, 102, 103, 104, 105, 106, 204, 205, 206
+// =========================================================================
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetNames = ["101", "102", "103", "104", "105", "106", "204", "205", "206"];
+  var eventsData = {};
+  
+  sheetNames.forEach(function(sName) {
+    var sheet = ss.getSheetByName(sName);
+    if (sheet) {
+      if (["204", "205", "206"].indexOf(sName) !== -1) {
+        eventsData[sName] = {
+          maleS1: parseSaringanMale(sheet.getRange("A5:G8").getDisplayValues(), 5),
+          maleS2: parseSaringanMale(sheet.getRange("A14:G17").getDisplayValues(), 14),
+          femaleS1: parseSaringanFemale(sheet.getRange("I5:O8").getDisplayValues(), 5),
+          femaleS2: parseSaringanFemale(sheet.getRange("I14:O17").getDisplayValues(), 14)
+        };
+      } else {
+        eventsData[sName] = {
+          maleS1: parseSaringanMale(sheet.getRange("A5:G12").getDisplayValues(), 5),
+          maleS2: parseSaringanMale(sheet.getRange("A18:G25").getDisplayValues(), 18),
+          femaleS1: parseSaringanFemale(sheet.getRange("I5:O12").getDisplayValues(), 5),
+          femaleS2: parseSaringanFemale(sheet.getRange("I18:O25").getDisplayValues(), 18)
+        };
+      }
+    }
+  });
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    events: eventsData
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function parseSaringanMale(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      lorong: r[0], nama: r[1], pasukan: r[3], bib: r[4],
+      ranking: r[5], masa: r[6]
+    });
+  }
+  return res;
+}
+
+function parseSaringanFemale(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      lorong: r[0], nama: r[1], pasukan: r[3], bib: r[4],
+      ranking: r[5], masa: r[6]
+    });
+  }
+  return res;
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (err) {
+    return responseJson({ status: "error", message: "Server sibuk." });
+  }
+
+  try {
+    var contents = JSON.parse(e.postData.contents);
+    var eventName = contents.eventName;
+    var rowIndex = parseInt(contents.rowIndex);
+    var colIndex = parseInt(contents.colIndex);
+    var value = contents.value;
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(eventName);
+    sheet.getRange(rowIndex, colIndex).setValue(value);
+
+    return responseJson({ status: "success", message: "[" + eventName + "] Kemas kini berjaya." });
+  } catch (err) {
+    return responseJson({ status: "error", message: err.toString() });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function responseJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}`;
+
+        const GAS_CODE_BALAPAN = `// =========================================================================
+// GOOGLE APPS SCRIPT - AKHIR BALAPAN (9 TAB SHEET)
+// Tab: 101, 102, 103, 104, 105, 106, 204, 205, 206
+// =========================================================================
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetNames = ["101", "102", "103", "104", "105", "106", "204", "205", "206"];
+  var eventsData = {};
+  
+  sheetNames.forEach(function(sName) {
+    var sheet = ss.getSheetByName(sName);
+    if (sheet) {
+      if (["204", "205", "206"].indexOf(sName) !== -1) {
+        eventsData[sName] = {
+          male: parseTrackStandard(sheet.getRange("A6:G9").getDisplayValues(), 6),
+          female: parseTrackStandard(sheet.getRange("A16:G19").getDisplayValues(), 16)
+        };
+      } else {
+        eventsData[sName] = {
+          male: parseTrackStandard(sheet.getRange("A6:G13").getDisplayValues(), 6),
+          female: parseTrackStandard(sheet.getRange("A20:G27").getDisplayValues(), 20)
+        };
+      }
+    }
+  });
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    events: eventsData
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function parseTrackStandard(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      lorong: r[0], nama: r[1], pasukan: r[3], bib: r[4],
+      ranking: r[5], masa: r[6]
+    });
+  }
+  return res;
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (err) {
+    return responseJson({ status: "error", message: "Server sibuk." });
+  }
+
+  try {
+    var contents = JSON.parse(e.postData.contents);
+    var eventName = contents.eventName;
+    var rowIndex = parseInt(contents.rowIndex);
+    var colIndex = parseInt(contents.colIndex);
+    var value = contents.value;
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(eventName);
+    sheet.getRange(rowIndex, colIndex).setValue(value);
+
+    return responseJson({ status: "success", message: "[" + eventName + "] Kemas kini berjaya." });
+  } catch (err) {
+    return responseJson({ status: "error", message: err.toString() });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function responseJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}`;
+
+        const GAS_CODE_RELAY = `// =========================================================================
+// GOOGLE APPS SCRIPT - ACARA RELAY (5 TAB SHEET)
+// Tab: 411, 414, 415, 424, 425
+// =========================================================================
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetNames = ["411", "414", "415", "424", "425"];
+  var eventsData = {};
+  
+  sheetNames.forEach(function(sName) {
+    var sheet = ss.getSheetByName(sName);
+    if (sheet) {
+      eventsData[sName] = {
+        male: parseRelayMale(sheet.getRange("A5:F8").getDisplayValues(), 5),
+        female: parseRelayFemale(sheet.getRange("I5:N8").getDisplayValues(), 5)
+      };
+    }
+  });
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    events: eventsData
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function parseRelayMale(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      lorong: r[0], pasukan: r[1], masa: r[3], kedudukan: r[5]
+    });
+  }
+  return res;
+}
+
+function parseRelayFemale(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      lorong: r[0], pasukan: r[1], masa: r[3], kedudukan: r[5]
+    });
+  }
+  return res;
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (err) {
+    return responseJson({ status: "error", message: "Server sibuk." });
+  }
+
+  try {
+    var contents = JSON.parse(e.postData.contents);
+    var eventName = contents.eventName;
+    var rowIndex = parseInt(contents.rowIndex);
+    var colIndex = parseInt(contents.colIndex);
+    var value = contents.value;
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(eventName);
+    sheet.getRange(rowIndex, colIndex).setValue(value);
+
+    return responseJson({ status: "success", message: "[" + eventName + "] Kemas kini berjaya." });
+  } catch (err) {
+    return responseJson({ status: "error", message: err.toString() });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function responseJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}`;
+
+        const GAS_CODE_PADANG_ACARA = `// =========================================================================
+// GOOGLE APPS SCRIPT - ACARA PADANG (3 TAB SHEET)
+// Tab: LOMPAT JAUH, LOMPAT TINGGI, LONTAR PELURU
+// =========================================================================
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetNames = ["LOMPAT JAUH", "LOMPAT TINGGI", "LONTAR PELURU"];
+  var eventsData = {};
+  
+  sheetNames.forEach(function(sName) {
+    var sheet = ss.getSheetByName(sName);
+    if (sheet) {
+      eventsData[sName] = {
+        male: parsePadangAcara(sheet.getRange("A9:M16").getDisplayValues(), 9),
+        female: parsePadangAcara(sheet.getRange("A26:M33").getDisplayValues(), 26)
+      };
+    }
+  });
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    events: eventsData
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function parsePadangAcara(values, startRow) {
+  var res = [];
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    res.push({
+      rowIndex: startRow + i,
+      giliran: r[0], nama: r[1], pasukan: r[3], bib: r[4],
+      p1: r[5], p2: r[6], p3: r[7], p4: r[8], p5: r[9], p6: r[10],
+      terbaik: r[11], kedudukan: r[12]
+    });
+  }
+  return res;
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(10000);
+  } catch (err) {
+    return responseJson({ status: "error", message: "Server sibuk." });
+  }
+
+  try {
+    var contents = JSON.parse(e.postData.contents);
+    var eventName = contents.eventName;
+    var rowIndex = parseInt(contents.rowIndex);
+    var colIndex = parseInt(contents.colIndex);
+    var value = contents.value;
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(eventName);
+    sheet.getRange(rowIndex, colIndex).setValue(value);
+
+    return responseJson({ status: "success", message: "[" + eventName + "] Kemas kini berjaya." });
+  } catch (err) {
+    return responseJson({ status: "error", message: err.toString() });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function responseJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}`;
+
+        let dataset = {};
+
+        SARINGAN_SHEETS.forEach(sheetName => {
+            dataset[sheetName] = generateMockSaringanData(sheetName);
+        });
+
+        AKHIR_SHEETS.forEach(sheetName => {
+            dataset[sheetName] = generateMockTrackData(sheetName);
+        });
+
+        RELAY_SHEETS.forEach(sheetName => {
+            dataset[sheetName] = generateMockRelayData(sheetName);
+        });
+
+        PADANG_ACARA_SHEETS.forEach(sheetName => {
+            dataset[sheetName] = generateMockPadangAcaraData(sheetName);
+        });
+
+        function generateMockSaringanData(sheetName) {
+            const houses = ["Garuda", "Rajawali", "Helang", "Kenyalang"];
+            const isSpecialRange = ['204', '205', '206'].includes(sheetName);
+            const rowCount = isSpecialRange ? 4 : 8;
+
+            const buildList = (startRow) => {
+                const list = [];
+                for (let i = 0; i < rowCount; i++) {
+                    list.push({
+                        rowIndex: startRow + i,
+                        lorong: i + 1,
+                        nama: `Pelari (${sheetName}) - Lorong ${i+1}`,
+                        pasukan: houses[i % houses.length],
+                        bib: `B${100 + i}`,
+                        ranking: String((i % 4) + 1),
+                        masa: `12.${40 + i}s`
+                    });
+                }
+                return list;
+            };
+
+            if (isSpecialRange) {
+                return {
+                    maleS1: buildList(5),
+                    maleS2: buildList(14),
+                    femaleS1: buildList(5),
+                    femaleS2: buildList(14)
+                };
+            }
+
+            return {
+                maleS1: buildList(5),
+                maleS2: buildList(18),
+                femaleS1: buildList(5),
+                femaleS2: buildList(18)
+            };
+        }
+
+        function generateMockTrackData(sheetName) {
+            const houses = ["Garuda", "Rajawali", "Helang", "Kenyalang"];
+            const isSpecialRange = ['204', '205', '206'].includes(sheetName);
+
+            if (isSpecialRange) {
+                const buildList = (startRow) => {
+                    const list = [];
+                    for (let i = 0; i < 4; i++) {
+                        list.push({
+                            rowIndex: startRow + i,
+                            lorong: i + 1,
+                            nama: `Pelari Akhir (${sheetName}) - L${i+1}`,
+                            pasukan: houses[i % houses.length],
+                            bib: `B${200 + i}`,
+                            ranking: String(i + 1),
+                            masa: `24.${10 + i}s`
+                        });
+                    }
+                    return list;
+                };
+                return { male: buildList(6), female: buildList(16) };
+            }
+
+            const buildList = (startRow) => {
+                const list = [];
+                for (let i = 0; i < 8; i++) {
+                    list.push({
+                        rowIndex: startRow + i,
+                        lorong: i + 1,
+                        nama: `Pelari Akhir (${sheetName}) - L${i+1}`,
+                        pasukan: houses[i % houses.length],
+                        bib: `A${100 + i}`,
+                        ranking: String((i % 4) + 1),
+                        masa: `11.${70 + i}s`
+                    });
+                }
+                return list;
+            };
+            return { male: buildList(6), female: buildList(20) };
+        }
+
+        function generateMockRelayData(sheetName) {
+            const houses = ["Garuda", "Rajawali", "Helang", "Kenyalang"];
+            const buildList = (startRow) => {
+                const list = [];
+                for (let i = 0; i < 4; i++) {
+                    list.push({
+                        rowIndex: startRow + i,
+                        lorong: i + 1,
+                        pasukan: houses[i % houses.length],
+                        masa: `48.${10 + i}s`,
+                        kedudukan: String(i + 1)
+                    });
+                }
+                return list;
+            };
+            return { male: buildList(5), female: buildList(5) };
+        }
+
+        function generateMockPadangAcaraData(sheetName) {
+            const houses = ["Garuda", "Rajawali", "Helang", "Kenyalang"];
+            const buildList = (startRow) => {
+                const list = [];
+                for (let i = 0; i < 8; i++) {
+                    list.push({
+                        rowIndex: startRow + i,
+                        giliran: i + 1,
+                        nama: `Atlet ${sheetName} - ${i+1}`,
+                        pasukan: houses[i % houses.length],
+                        bib: `P${300 + i}`,
+                        p1: `5.${40 + i}m`,
+                        p2: `5.${42 + i}m`,
+                        p3: `5.${45 + i}m`,
+                        p4: `5.${41 + i}m`,
+                        p5: `5.${48 + i}m`,
+                        p6: `5.${50 + i}m`,
+                        terbaik: `5.${50 + i}m`,
+                        kedudukan: String((i % 4) + 1)
+                    });
+                }
+                return list;
+            };
+            return { male: buildList(9), female: buildList(26) };
+        }
+
+        window.onload = function() {
+            const codePadangEl = document.getElementById('gasCodeBlockPadang');
+            const codeBalapanEl = document.getElementById('gasCodeBlockBalapan');
+            const codeRelayEl = document.getElementById('gasCodeBlockRelay');
+            const codePadangAcaraEl = document.getElementById('gasCodeBlockPadangAcara');
+
+            if (codePadangEl) codePadangEl.innerText = GAS_CODE_PADANG;
+            if (codeBalapanEl) codeBalapanEl.innerText = GAS_CODE_BALAPAN;
+            if (codeRelayEl) codeRelayEl.innerText = GAS_CODE_RELAY;
+            if (codePadangAcaraEl) codePadangAcaraEl.innerText = GAS_CODE_PADANG_ACARA;
+
+            const padangInput = document.getElementById('webAppUrlPadangInput');
+            const balapanInput = document.getElementById('webAppUrlBalapanInput');
+            const relayInput = document.getElementById('webAppUrlRelayInput');
+            const padangAcaraInput = document.getElementById('webAppUrlPadangAcaraInput');
+
+            if (webAppUrlPadang && padangInput) {
+                padangInput.value = webAppUrlPadang;
+                setFieldSavedState('padang', true);
+            }
+            if (webAppUrlBalapan && balapanInput) {
+                balapanInput.value = webAppUrlBalapan;
+                setFieldSavedState('balapan', true);
+            }
+            if (webAppUrlRelay && relayInput) {
+                relayInput.value = webAppUrlRelay;
+                setFieldSavedState('relay', true);
+            }
+            if (webAppUrlPadangAcara && padangAcaraInput) {
+                padangAcaraInput.value = webAppUrlPadangAcara;
+                setFieldSavedState('padang_acara', true);
+            }
+
+            updateBadge();
+            
+            if (webAppUrlPadang || webAppUrlBalapan || webAppUrlRelay || webAppUrlPadangAcara) {
+                fetchDataFromBackend();
+            } else {
+                renderAllTables();
+                updateStats();
+            }
+        };
+
+        function setFieldSavedState(type, isSaved) {
+            let inputId = 'webAppUrlPadangInput';
+            let badgeId = 'badgePadangUrlStatus';
+
+            if (type === 'balapan') { inputId = 'webAppUrlBalapanInput'; badgeId = 'badgeBalapanUrlStatus'; }
+            else if (type === 'relay') { inputId = 'webAppUrlRelayInput'; badgeId = 'badgeRelayUrlStatus'; }
+            else if (type === 'padang_acara') { inputId = 'webAppUrlPadangAcaraInput'; badgeId = 'badgePadangAcaraUrlStatus'; }
+
+            const input = document.getElementById(inputId);
+            const badge = document.getElementById(badgeId);
+
+            if (input && badge) {
+                if (isSaved) {
+                    input.readOnly = true;
+                    input.classList.add('bg-slate-100', 'text-slate-600', 'cursor-not-allowed');
+                    badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200";
+                    badge.innerText = "Tersimpan";
+                } else {
+                    input.readOnly = false;
+                    input.classList.remove('bg-slate-100', 'text-slate-600', 'cursor-not-allowed');
+                    badge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200";
+                    badge.innerText = "Mod Edit";
+                }
+            }
+        }
+
+        function normalizeHouseName(pasukan) {
+            if (!pasukan) return '';
+            const clean = String(pasukan).trim().toLowerCase();
+            if (clean.includes('garuda') || clean.includes('merah')) return 'Garuda';
+            if (clean.includes('rajawali') || clean.includes('biru')) return 'Rajawali';
+            if (clean.includes('helang') || clean.includes('hijau')) return 'Helang';
+            if (clean.includes('kenyalang') || clean.includes('kuning')) return 'Kenyalang';
+            return String(pasukan).trim();
+        }
+
+        function getHouseColorDot(pasukan) {
+            const norm = normalizeHouseName(pasukan);
+            switch(norm) {
+                case 'Garuda': return 'bg-rose-500';
+                case 'Rajawali': return 'bg-blue-500';
+                case 'Helang': return 'bg-emerald-500';
+                case 'Kenyalang': return 'bg-amber-400';
+                default: return 'bg-slate-400';
+            }
+        }
+
+        function getHouseTextColor(pasukan) {
+            const norm = normalizeHouseName(pasukan);
+            switch(norm) {
+                case 'Garuda': return 'text-rose-600';
+                case 'Rajawali': return 'text-blue-600';
+                case 'Helang': return 'text-emerald-600';
+                case 'Kenyalang': return 'text-amber-500';
+                default: return 'text-slate-700';
+            }
+        }
+
+        function switchTab(tabName) {
+            currentMainTab = tabName;
+            const tabPadang = document.getElementById('tabContent-padang');
+            const tabBalapan = document.getElementById('tabContent-balapan');
+            const tabRelay = document.getElementById('tabContent-relay');
+            const tabPadangAcara = document.getElementById('tabContent-padang_acara');
+            const tabRumusan = document.getElementById('tabContent-rumusan');
+
+            const btnPadang = document.getElementById('tabBtn-padang');
+            const btnBalapan = document.getElementById('tabBtn-balapan');
+            const btnRelay = document.getElementById('tabBtn-relay');
+            const btnPadangAcara = document.getElementById('tabBtn-padang_acara');
+            const btnRumusan = document.getElementById('tabBtn-rumusan');
+
+            [tabPadang, tabBalapan, tabRelay, tabPadangAcara, tabRumusan].forEach(t => t?.classList.add('hidden'));
+
+            [btnPadang, btnBalapan, btnRelay, btnPadangAcara, btnRumusan].forEach(btn => {
+                if (btn) btn.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-100 text-slate-700 hover:bg-slate-200 whitespace-nowrap";
+            });
+
+            if (tabName === 'padang') {
+                tabPadang.classList.remove('hidden');
+                btnPadang.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900";
+            } else if (tabName === 'balapan') {
+                tabBalapan.classList.remove('hidden');
+                btnBalapan.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900";
+            } else if (tabName === 'relay') {
+                tabRelay.classList.remove('hidden');
+                btnRelay.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900";
+            } else if (tabName === 'padang_acara') {
+                tabPadangAcara.classList.remove('hidden');
+                btnPadangAcara.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900";
+            } else {
+                tabRumusan.classList.remove('hidden');
+                btnRumusan.className = "tab-btn py-2.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition flex items-center gap-2 bg-slate-900 text-white shadow-sm whitespace-nowrap border border-slate-900";
+                renderHouseStats();
+            }
+        }
+
+        function switchSaringanEvent(sheetName) {
+            currentSaringanEvent = sheetName;
+            document.getElementById('currentSaringanSheetBadge').innerText = `Sheet: ${sheetName}`;
+
+            SARINGAN_SHEETS.forEach(ev => {
+                const btn = document.getElementById(`saringanBtn-${ev}`);
+                if (btn) {
+                    btn.className = (ev === sheetName) 
+                        ? "saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs"
+                        : "saringan-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200";
+                }
+            });
+
+            const isSpecial = ['204', '205', '206'].includes(sheetName);
+            document.getElementById('maleS1RangeBadge').innerText = isSpecial ? 'Range: A5:G8 | Sunting: F5:G8' : 'Range: A5:G12 | Sunting: F5:G12';
+            document.getElementById('maleS2RangeBadge').innerText = isSpecial ? 'Range: A14:G17 | Sunting: F14:G17' : 'Range: A18:G25 | Sunting: F18:G25';
+            document.getElementById('femaleS1RangeBadge').innerText = isSpecial ? 'Range: I5:O8 | Sunting: N5:O8' : 'Range: I5:O12 | Sunting: N5:O12';
+            document.getElementById('femaleS2RangeBadge').innerText = isSpecial ? 'Range: I14:O17 | Sunting: N14:O17' : 'Range: I18:O25 | Sunting: N18:O25';
+
+            renderPadangTables();
+            updateStats();
+        }
+
+        function switchBalapanEvent(sheetName) {
+            currentBalapanEvent = sheetName;
+            document.getElementById('currentTrackSheetBadge').innerText = `Sheet: ${sheetName}`;
+
+            const allBtns = document.querySelectorAll('.balapan-btn');
+            allBtns.forEach(btn => {
+                btn.className = "balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200";
+            });
+
+            const activeBtn = document.getElementById(`balapanBtn-${sheetName}`);
+            if (activeBtn) activeBtn.className = "balapan-btn px-3 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs";
+
+            const is200Group = ['204', '205', '206'].includes(sheetName);
+
+            if (is200Group) {
+                document.getElementById('balapanMaleRangeSubtitle').innerHTML = `Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A6:G9</span> (Sunting: F6:G9)`;
+                document.getElementById('balapanFemaleRangeSubtitle').innerHTML = `Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A16:G19</span> (Sunting: F16:G19)`;
+            } else {
+                document.getElementById('balapanMaleRangeSubtitle').innerHTML = `Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A6:G13</span> (Sunting: F6:G13)`;
+                document.getElementById('balapanFemaleRangeSubtitle').innerHTML = `Google Sheet Range: <span class="font-mono text-amber-300 font-bold">A20:G27</span> (Sunting: F20:G27)`;
+            }
+
+            renderBalapanTables();
+            updateStats();
+        }
+
+        function switchRelayEvent(sheetName) {
+            currentRelayEvent = sheetName;
+            document.getElementById('currentRelaySheetBadge').innerText = `Sheet: ${sheetName}`;
+
+            RELAY_SHEETS.forEach(ev => {
+                const btn = document.getElementById(`relayBtn-${ev}`);
+                if (btn) {
+                    btn.className = (ev === sheetName)
+                        ? "relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs"
+                        : "relay-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200";
+                }
+            });
+
+            renderRelayTables();
+        }
+
+        function switchPadangAcaraEvent(sheetName) {
+            currentPadangAcaraEvent = sheetName;
+            document.getElementById('currentPadangAcaraSheetBadge').innerText = `Sheet: ${sheetName}`;
+
+            PADANG_ACARA_SHEETS.forEach(ev => {
+                const btn = document.getElementById(`padangAcaraBtn-${ev}`);
+                if (btn) {
+                    btn.className = (ev === sheetName)
+                        ? "padang-acara-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-900 text-white shadow-xs"
+                        : "padang-acara-btn px-3.5 py-1.5 rounded-lg font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200";
+                }
+            });
+
+            renderPadangAcaraTables();
+        }
+
+        function renderAllTables() {
+            renderPadangTables();
+            renderBalapanTables();
+            renderRelayTables();
+            renderPadangAcaraTables();
+        }
+
+        function renderPadangTables() {
+            renderSaringanSubTable('maleS1', 'saringanMaleS1TableBody', 'male', 6, 7);
+            renderSaringanSubTable('maleS2', 'saringanMaleS2TableBody', 'male', 6, 7);
+            renderSaringanSubTable('femaleS1', 'saringanFemaleS1TableBody', 'female', 14, 15);
+            renderSaringanSubTable('femaleS2', 'saringanFemaleS2TableBody', 'female', 14, 15);
+        }
+
+        function renderSaringanSubTable(key, containerId, category, rankColIdx, timeColIdx) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const rows = dataset[currentSaringanEvent]?.[key] || [];
+            let html = '';
+            const isFemale = category === 'female';
+            const focusClass = isFemale ? 'editable-field-female' : 'editable-field';
+
+            rows.forEach((row) => {
+                const houseDotColor = getHouseColorDot(row.pasukan);
+                const houseTextColor = getHouseTextColor(row.pasukan);
+
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3 px-3 text-center font-bold text-slate-600 ${isFemale ? 'bg-rose-50/30' : 'bg-blue-50/30'}">${row.lorong || '-'}</td>
+                        <td class="py-3 px-4 font-semibold text-slate-800 min-w-[200px]">${row.nama || '-'}</td>
+                        <td class="py-3 px-3 font-bold ${houseTextColor} min-w-[120px]">
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full ${houseDotColor}"></span>
+                                ${row.pasukan || '-'}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 text-center font-mono font-medium text-slate-600">${row.bib || '-'}</td>
+                        
+                        <td class="py-2 px-3 text-center ${isFemale ? 'bg-rose-50/30 border-x border-rose-100' : 'bg-blue-50/30 border-x border-blue-100'}">
+                            <input type="number" min="1" max="99" value="${row.ranking || ''}" 
+                                onblur="handleSingleCellSave('padang', '${currentSaringanEvent}', '${category}', ${row.rowIndex}, ${rankColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-16 text-center py-1.5 border ${isFemale ? 'border-rose-300 text-rose-950' : 'border-blue-300 text-blue-900'} rounded-xl font-bold text-xs focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-2 px-3 text-center bg-emerald-50/30 border-r border-emerald-100">
+                            <input type="text" value="${row.masa || ''}" 
+                                placeholder="00:00.00"
+                                title="Format tempoh masa (contoh: 12.45s atau 01:23.45)"
+                                onblur="handleSingleCellSave('padang', '${currentSaringanEvent}', '${category}', ${row.rowIndex}, ${timeColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-24 text-center py-1.5 border border-emerald-300 rounded-xl font-bold text-emerald-900 text-xs font-mono focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-3 px-3 text-center">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                                <i class="fa-solid fa-check text-[9px]"></i> Ready
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = html || `<tr><td colspan="7" class="p-4 text-center text-slate-400">Tiada data.</td></tr>`;
+        }
+
+        function renderBalapanTables() {
+            const maleThead = document.getElementById('balapanMaleThead');
+            const femaleThead = document.getElementById('balapanFemaleThead');
+
+            const headerHtml = `
+                <tr>
+                    <th class="py-3.5 px-3 text-center w-16 bg-blue-100/50">Lorong (A)</th>
+                    <th class="py-3.5 px-4 min-w-[200px]">Nama Peserta (B & C)</th>
+                    <th class="py-3.5 px-3 min-w-[120px]">Pasukan (D)</th>
+                    <th class="py-3.5 px-3 text-center w-24">No Bib (E)</th>
+                    <th class="py-3.5 px-4 text-center w-28 bg-blue-100/80 text-blue-950 border-x border-blue-200">Ranking (F) <i class="fa-solid fa-pen text-[9px] text-blue-600"></i></th>
+                    <th class="py-3.5 px-4 text-center w-36 bg-emerald-100/80 text-emerald-900 border-r border-emerald-200">Catatan Masa (G) <i class="fa-solid fa-pen text-[9px] text-emerald-600"></i></th>
+                    <th class="py-3.5 px-3 text-center w-24">Status</th>
+                </tr>
+            `;
+            if (maleThead) maleThead.innerHTML = headerHtml;
+
+            const femaleHeaderHtml = headerHtml.replace(/bg-blue-/g, 'bg-rose-').replace(/text-blue-/g, 'text-rose-').replace(/border-blue-/g, 'border-rose-');
+            if (femaleThead) femaleThead.innerHTML = femaleHeaderHtml;
+
+            renderBalapanCategoryTable('male', 'balapanMaleTableBody');
+            renderBalapanCategoryTable('female', 'balapanFemaleTableBody');
+        }
+
+        function renderBalapanCategoryTable(category, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const sheetData = dataset[currentBalapanEvent];
+            const rows = sheetData?.[category] || [];
+            const sheetName = currentBalapanEvent;
+            const isFemale = category === 'female';
+            const focusClass = isFemale ? 'editable-field-female' : 'editable-field';
+
+            let html = '';
+
+            rows.forEach((row) => {
+                const houseDotColor = getHouseColorDot(row.pasukan);
+                const houseTextColor = getHouseTextColor(row.pasukan);
+
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3 px-3 text-center font-bold text-slate-600 ${isFemale ? 'bg-rose-50/30' : 'bg-blue-50/30'}">${row.lorong || '-'}</td>
+                        <td class="py-3 px-4 font-semibold text-slate-800 min-w-[200px]">${row.nama || '-'}</td>
+                        <td class="py-3 px-3 font-bold ${houseTextColor} min-w-[120px]">
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full ${houseDotColor}"></span>
+                                ${row.pasukan || '-'}
+                            </span>
+                        </td>
+                        <td class="py-3 px-3 text-center font-mono font-medium text-slate-600">${row.bib || '-'}</td>
+                        
+                        <td class="py-2 px-3 text-center ${isFemale ? 'bg-rose-50/30 border-x border-rose-100' : 'bg-blue-50/30 border-x border-blue-100'}">
+                            <input type="number" min="1" max="99" value="${row.ranking || ''}" 
+                                onblur="handleSingleCellSave('balapan', '${sheetName}', '${category}', ${row.rowIndex}, 6, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-16 text-center py-1.5 border ${isFemale ? 'border-rose-300 text-rose-950' : 'border-blue-300 text-blue-900'} rounded-xl font-bold text-xs focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-2 px-3 text-center bg-emerald-50/30 border-r border-emerald-100">
+                            <input type="text" value="${row.masa || ''}" 
+                                placeholder="00:00.00"
+                                title="Format tempoh masa (contoh: 11.70s atau 01:05.12)"
+                                onblur="handleSingleCellSave('balapan', '${sheetName}', '${category}', ${row.rowIndex}, 7, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-24 text-center py-1.5 border border-emerald-300 rounded-xl font-bold text-emerald-900 text-xs font-mono focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-3 px-3 text-center">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                                <i class="fa-solid fa-check text-[9px]"></i> Ready
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = html || `<tr><td colspan="7" class="p-4 text-center text-slate-400">Tiada data.</td></tr>`;
+        }
+
+        function renderRelayTables() {
+            renderRelaySubTable('male', 'relayMaleTableBody', 4, 6);
+            renderRelaySubTable('female', 'relayFemaleTableBody', 12, 14);
+        }
+
+        function renderRelaySubTable(category, containerId, timeColIdx, rankColIdx) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const sheetData = dataset[currentRelayEvent];
+            const rows = sheetData?.[category] || [];
+            const isFemale = category === 'female';
+            const focusClass = isFemale ? 'editable-field-female' : 'editable-field';
+
+            let html = '';
+
+            rows.forEach((row) => {
+                const houseDotColor = getHouseColorDot(row.pasukan);
+                const houseTextColor = getHouseTextColor(row.pasukan);
+
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3 px-3 text-center font-bold text-slate-600 ${isFemale ? 'bg-rose-50/30' : 'bg-purple-50/30'}">${row.lorong || '-'}</td>
+                        <td class="py-3 px-4 font-bold ${houseTextColor} min-w-[220px]">
+                            <span class="inline-flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full ${houseDotColor}"></span>
+                                ${row.pasukan || '-'}
+                            </span>
+                        </td>
+
+                        <!-- Masa Input (Col D [4] for Male, Col L [12] for Female) -->
+                        <td class="py-2 px-4 text-center bg-emerald-50/30 border-x border-emerald-100">
+                            <input type="text" value="${row.masa || ''}" 
+                                placeholder="00:00.00"
+                                onblur="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${row.rowIndex}, ${timeColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-28 text-center py-1.5 border border-emerald-300 rounded-xl font-bold text-emerald-900 text-xs font-mono focus:outline-none"
+                            />
+                        </td>
+
+                        <!-- Kedudukan Input (Col F [6] for Male, Col N [14] for Female) -->
+                        <td class="py-2 px-4 text-center ${isFemale ? 'bg-rose-50/30 border-r border-rose-100' : 'bg-purple-50/30 border-r border-purple-100'}">
+                            <input type="number" min="1" max="99" value="${row.kedudukan || row.ranking || ''}" 
+                                onblur="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${row.rowIndex}, ${rankColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-20 text-center py-1.5 border ${isFemale ? 'border-rose-300 text-rose-950' : 'border-purple-300 text-purple-900'} rounded-xl font-bold text-xs focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-3 px-3 text-center">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                                <i class="fa-solid fa-check text-[9px]"></i> Ready
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = html || `<tr><td colspan="5" class="p-4 text-center text-slate-400">Tiada data.</td></tr>`;
+        }
+
+        function renderPadangAcaraTables() {
+            renderPadangAcaraSubTable('male', 'padangAcaraMaleTableBody', 12, 13);
+            renderPadangAcaraSubTable('female', 'padangAcaraFemaleTableBody', 12, 13);
+        }
+
+        function renderPadangAcaraSubTable(category, containerId, terbaikColIdx, kedudukanColIdx) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const sheetData = dataset[currentPadangAcaraEvent];
+            const rows = sheetData?.[category] || [];
+            const isFemale = category === 'female';
+            const focusClass = isFemale ? 'editable-field-female' : 'editable-field';
+
+            let html = '';
+
+            rows.forEach((row) => {
+                const houseDotColor = getHouseColorDot(row.pasukan);
+                const houseTextColor = getHouseTextColor(row.pasukan);
+
+                html += `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-3 px-2 text-center font-bold text-slate-600 ${isFemale ? 'bg-rose-50/30' : 'bg-emerald-50/30'}">${row.giliran || '-'}</td>
+                        <td class="py-3 px-3 font-semibold text-slate-800 min-w-[180px]">${row.nama || '-'}</td>
+                        <td class="py-3 px-2 font-bold ${houseTextColor} min-w-[100px]">
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full ${houseDotColor}"></span>
+                                ${row.pasukan || '-'}
+                            </span>
+                        </td>
+                        <td class="py-3 px-2 text-center font-mono font-medium text-slate-600">${row.bib || '-'}</td>
+
+                        <!-- Percubaan 1-6 (Display only) -->
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p1 || '-'}</td>
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p2 || '-'}</td>
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p3 || '-'}</td>
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p4 || '-'}</td>
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p5 || '-'}</td>
+                        <td class="py-3 px-2 text-center font-mono text-[11px] text-slate-500 bg-slate-50/60">${row.p6 || '-'}</td>
+
+                        <!-- Catatan Terbaik Input (Col L [12]) -->
+                        <td class="py-2 px-3 text-center bg-amber-50/40 border-x border-amber-200">
+                            <input type="text" value="${row.terbaik || ''}" 
+                                placeholder="0.00m"
+                                onblur="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${row.rowIndex}, ${terbaikColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-20 text-center py-1.5 border border-amber-300 rounded-xl font-bold text-amber-950 text-xs font-mono focus:outline-none"
+                            />
+                        </td>
+
+                        <!-- Kedudukan Input (Col M [13]) -->
+                        <td class="py-2 px-3 text-center ${isFemale ? 'bg-rose-50/30 border-r border-rose-100' : 'bg-emerald-50/30 border-r border-emerald-100'}">
+                            <input type="number" min="1" max="99" value="${row.kedudukan || row.ranking || ''}" 
+                                onblur="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${row.rowIndex}, ${kedudukanColIdx}, this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()"
+                                class="${focusClass} w-16 text-center py-1.5 border ${isFemale ? 'border-rose-300 text-rose-950' : 'border-emerald-300 text-emerald-900'} rounded-xl font-bold text-xs focus:outline-none"
+                            />
+                        </td>
+
+                        <td class="py-3 px-2 text-center">
+                            <span class="inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+                                <i class="fa-solid fa-check text-[9px]"></i> Ready
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = html || `<tr><td colspan="13" class="p-4 text-center text-slate-400">Tiada data.</td></tr>`;
+        }
+
+        function updateLocalDatasetCell(eventName, rowIndex, colIndex, value) {
+            if (!dataset[eventName]) return;
+            const eventObj = dataset[eventName];
+
+            Object.keys(eventObj).forEach(key => {
+                const list = eventObj[key];
+                if (Array.isArray(list)) {
+                    const row = list.find(r => r.rowIndex === rowIndex);
+                    if (row) {
+                        if (colIndex === 6 || colIndex === 14) { row.ranking = value; row.kedudukan = value; }
+                        else if (colIndex === 7 || colIndex === 15) row.masa = value;
+                        else if (colIndex === 4 || colIndex === 12) {
+                            if (RELAY_SHEETS.includes(eventName)) row.masa = value;
+                            else if (PADANG_ACARA_SHEETS.includes(eventName)) row.terbaik = value;
+                        }
+                        else if (colIndex === 13) { row.kedudukan = value; row.ranking = value; }
+                    }
+                }
+            });
+        }
+
+        async function handleSingleCellSave(type, eventName, category, rowIndex, colIndex, value) {
+            updateLocalDatasetCell(eventName, rowIndex, colIndex, value);
+            updateStats();
+
+            showAutoSyncSpinner(true);
+            pendingSaveCount++;
+
+            const payload = {
+                eventName: eventName,
+                category: category,
+                rowIndex: rowIndex,
+                colIndex: colIndex,
+                value: value
+            };
+
+            let targetUrl = webAppUrlPadang;
+            if (type === 'balapan') targetUrl = webAppUrlBalapan;
+            else if (type === 'relay') targetUrl = webAppUrlRelay;
+            else if (type === 'padang_acara') targetUrl = webAppUrlPadangAcara;
+
+            if (!targetUrl) {
+                setTimeout(() => {
+                    pendingSaveCount = Math.max(0, pendingSaveCount - 1);
+                    if (pendingSaveCount === 0) showAutoSyncSpinner(false);
+                    showToast("Data disimpan (Mode Belum Aktif)", "success");
+                    updateStats();
+                }, 400);
+                return;
+            }
+
+            try {
+                const response = await fetch(targetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload),
+                    redirect: 'follow'
+                });
+
+                const rawText = await response.text();
+                let result = JSON.parse(rawText);
+
+                if (result.status === 'success') {
+                    showToast("Data berjaya disimpan ke Google Sheets!", "success");
+                    consecutiveFetchFailures = 0;
+                } else {
+                    showToast(`Ralat: ${result.message}`, "error");
+                }
+            } catch (err) {
+                showToast(`Gagal menyambung: ${err.message}`, "error");
+            } finally {
+                pendingSaveCount = Math.max(0, pendingSaveCount - 1);
+                if (pendingSaveCount === 0) showAutoSyncSpinner(false);
+                updateStats();
+            }
+        }
+
+        async function fetchDataFromBackend(isManual = false) {
+            if (!isManual && pendingSaveCount > 0) return;
+
+            const refreshBtn = document.getElementById('refreshIcon');
+            if (refreshBtn) refreshBtn.classList.add('fa-spin');
+
+            if (!webAppUrlPadang && !webAppUrlBalapan && !webAppUrlRelay && !webAppUrlPadangAcara) {
+                if (isManual) showToast("Sila tetapkan Web App URL di Tetapan Admin.", "info");
+                if (refreshBtn) refreshBtn.classList.remove('fa-spin');
+                return;
+            }
+
+            let fetchedAny = false;
+
+            const fetchService = async (url) => {
+                if (!url) return null;
+                const sanitizedUrl = url.trim().replace(/\/edit.*$/, '/exec');
+                const response = await fetch(`${sanitizedUrl}?t=${new Date().getTime()}`, { redirect: 'follow' });
+                const rawText = await response.text();
+                return JSON.parse(rawText);
+            };
+
+            try {
+                if (webAppUrlPadang) {
+                    const data = await fetchService(webAppUrlPadang);
+                    if (data && data.status === 'success' && data.events) {
+                        Object.keys(data.events).forEach(sName => { if (data.events[sName]) dataset[sName] = data.events[sName]; });
+                        fetchedAny = true;
+                    }
+                }
+            } catch (err) { if (isManual) showToast(`Ralat Saringan: ${err.message}`, "error"); }
+
+            try {
+                if (webAppUrlBalapan) {
+                    const data = await fetchService(webAppUrlBalapan);
+                    if (data && data.status === 'success' && data.events) {
+                        Object.keys(data.events).forEach(sName => { if (data.events[sName]) dataset[sName] = data.events[sName]; });
+                        fetchedAny = true;
+                    }
+                }
+            } catch (err) { if (isManual) showToast(`Ralat Akhir Balapan: ${err.message}`, "error"); }
+
+            try {
+                if (webAppUrlRelay) {
+                    const data = await fetchService(webAppUrlRelay);
+                    if (data && data.status === 'success' && data.events) {
+                        Object.keys(data.events).forEach(sName => { if (data.events[sName]) dataset[sName] = data.events[sName]; });
+                        fetchedAny = true;
+                    }
+                }
+            } catch (err) { if (isManual) showToast(`Ralat Relay: ${err.message}`, "error"); }
+
+            try {
+                if (webAppUrlPadangAcara) {
+                    const data = await fetchService(webAppUrlPadangAcara);
+                    if (data && data.status === 'success' && data.events) {
+                        Object.keys(data.events).forEach(sName => { if (data.events[sName]) dataset[sName] = data.events[sName]; });
+                        fetchedAny = true;
+                    }
+                }
+            } catch (err) { if (isManual) showToast(`Ralat Acara Padang: ${err.message}`, "error"); }
+
+            if (fetchedAny) {
+                renderAllTables();
+                updateStats();
+                consecutiveFetchFailures = 0;
+                const lastUpdateEl = document.getElementById('statLastUpdate');
+                if (lastUpdateEl) lastUpdateEl.innerText = `Kemas kini: ${new Date().toLocaleTimeString()}`;
+                if (isManual) showToast("Data berjaya disegarkan!", "success");
+            }
+
+            if (refreshBtn) refreshBtn.classList.remove('fa-spin');
+        }
+
+        function updateStats() {
+            const houseMedals = {
+                Garuda: { gold: 0, silver: 0, bronze: 0 },
+                Rajawali: { gold: 0, silver: 0, bronze: 0 },
+                Helang: { gold: 0, silver: 0, bronze: 0 },
+                Kenyalang: { gold: 0, silver: 0, bronze: 0 }
+            };
+
+            AKHIR_SHEETS.forEach(sName => {
+                const ev = dataset[sName];
+                const subLists = [ev?.male, ev?.female];
+                
+                subLists.forEach(list => {
+                    if (!list) return;
+                    list.forEach(row => {
+                        const normHouse = normalizeHouseName(row.pasukan);
+                        const r = parseInt(row.ranking || row.kedudukan);
+
+                        if (houseMedals[normHouse]) {
+                            if (r === 1) houseMedals[normHouse].gold++;
+                            else if (r === 2) houseMedals[normHouse].silver++;
+                            else if (r === 3) houseMedals[normHouse].bronze++;
+                        }
+                    });
+                });
+            });
+
+            let leaderHouse = 'Garuda';
+            let maxGold = -1;
+            let maxSilver = -1;
+
+            Object.keys(houseMedals).forEach(h => {
+                const g = houseMedals[h].gold;
+                const s = houseMedals[h].silver;
+                if (g > maxGold || (g === maxGold && s > maxSilver)) {
+                    maxGold = g;
+                    maxSilver = s;
+                    leaderHouse = h;
+                }
+            });
+
+            const leaderEl = document.getElementById('statLeader');
+            if (leaderEl) {
+                leaderEl.className = `text-sm font-bold ${getHouseTextColor(leaderHouse)} mt-1`;
+                leaderEl.innerText = `${leaderHouse} (${maxGold} Emas)`;
+            }
+        }
+
+        function renderHouseStats() {
+            const grid = document.getElementById('houseStatsGrid');
+            if (!grid) return;
+
+            const houses = [
+                { name: 'Garuda', color: 'border-rose-500 bg-rose-50/50 text-rose-600', dot: 'bg-rose-500' },
+                { name: 'Rajawali', color: 'border-blue-500 bg-blue-50/50 text-blue-600', dot: 'bg-blue-500' },
+                { name: 'Helang', color: 'border-emerald-500 bg-emerald-50/50 text-emerald-600', dot: 'bg-emerald-500' },
+                { name: 'Kenyalang', color: 'border-amber-400 bg-amber-50/50 text-amber-600', dot: 'bg-amber-400' }
+            ];
+
+            const houseMedals = {
+                Garuda: { gold: 0, silver: 0, bronze: 0, points: 0 },
+                Rajawali: { gold: 0, silver: 0, bronze: 0, points: 0 },
+                Helang: { gold: 0, silver: 0, bronze: 0, points: 0 },
+                Kenyalang: { gold: 0, silver: 0, bronze: 0, points: 0 }
+            };
+
+            AKHIR_SHEETS.forEach(sName => {
+                const ev = dataset[sName];
+                const subLists = [ev?.male, ev?.female];
+                
+                subLists.forEach(list => {
+                    if (!list) return;
+                    list.forEach(row => {
+                        const normHouse = normalizeHouseName(row.pasukan);
+                        const r = parseInt(row.ranking || row.kedudukan);
+
+                        if (houseMedals[normHouse]) {
+                            if (r === 1) { houseMedals[normHouse].gold++; houseMedals[normHouse].points += 5; }
+                            else if (r === 2) { houseMedals[normHouse].silver++; houseMedals[normHouse].points += 3; }
+                            else if (r === 3) { houseMedals[normHouse].bronze++; houseMedals[normHouse].points += 1; }
+                        }
+                    });
+                });
+            });
+
+            let html = '';
+            houses.forEach(h => {
+                const stats = houseMedals[h.name];
+                html += `
+                    <div class="rounded-2xl p-4 border-2 ${h.color} transition hover:shadow-md">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="font-bold text-sm flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full ${h.dot}"></span>
+                                Rumah ${h.name}
+                            </span>
+                            <span class="text-xs font-black bg-white px-2.5 py-1 rounded-full border shadow-xs">
+                                ${stats.points} Mata
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                            <div class="bg-amber-100/90 text-amber-900 rounded-xl p-2 font-bold border border-amber-200/60">
+                                🥇 <span class="block text-sm font-black mt-0.5">${stats.gold}</span> Emas
+                            </div>
+                            <div class="bg-slate-200/90 text-slate-800 rounded-xl p-2 font-bold border border-slate-300/60">
+                                🥈 <span class="block text-sm font-black mt-0.5">${stats.silver}</span> Perak
+                            </div>
+                            <div class="bg-amber-800/10 text-amber-950 rounded-xl p-2 font-bold border border-amber-900/10">
+                                🥉 <span class="block text-sm font-black mt-0.5">${stats.bronze}</span> Gangsa
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function toggleSetupModal() {
+            const modal = document.getElementById('setupModal');
+            if (modal) modal.classList.toggle('hidden');
+        }
+
+        function saveApiUrl(type) {
+            let inputId = 'webAppUrlPadangInput';
+            if (type === 'balapan') inputId = 'webAppUrlBalapanInput';
+            else if (type === 'relay') inputId = 'webAppUrlRelayInput';
+            else if (type === 'padang_acara') inputId = 'webAppUrlPadangAcaraInput';
+
+            const input = document.getElementById(inputId);
+            let url = input ? input.value.trim() : '';
+
+            if (url) {
+                url = url.replace(/\/edit.*$/, '/exec');
+                if (type === 'padang') {
+                    localStorage.setItem('sports_webapp_url_padang', url);
+                    webAppUrlPadang = url;
+                } else if (type === 'balapan') {
+                    localStorage.setItem('sports_webapp_url_balapan', url);
+                    webAppUrlBalapan = url;
+                } else if (type === 'relay') {
+                    localStorage.setItem('sports_webapp_url_relay', url);
+                    webAppUrlRelay = url;
+                } else if (type === 'padang_acara') {
+                    localStorage.setItem('sports_webapp_url_padang_acara', url);
+                    webAppUrlPadangAcara = url;
+                }
+                setFieldSavedState(type, true);
+                showToast(`URL Web App (${type}) berjaya disimpan!`, "success");
+                updateBadge();
+                fetchDataFromBackend(true);
+            } else {
+                showToast("Sila masukkan URL Web App sebelum menyimpan.", "error");
+            }
+        }
+
+        function editApiUrl(type) {
+            setFieldSavedState(type, false);
+            let inputId = 'webAppUrlPadangInput';
+            if (type === 'balapan') inputId = 'webAppUrlBalapanInput';
+            else if (type === 'relay') inputId = 'webAppUrlRelayInput';
+            else if (type === 'padang_acara') inputId = 'webAppUrlPadangAcaraInput';
+
+            const input = document.getElementById(inputId);
+            if (input) input.focus();
+            showToast(`Mod edit diaktifkan bagi URL ${type}.`, "info");
+        }
+
+        function deleteApiUrl(type) {
+            let inputId = 'webAppUrlPadangInput';
+            if (type === 'padang') {
+                localStorage.removeItem('sports_webapp_url_padang');
+                webAppUrlPadang = '';
+            } else if (type === 'balapan') {
+                localStorage.removeItem('sports_webapp_url_balapan');
+                webAppUrlBalapan = '';
+                inputId = 'webAppUrlBalapanInput';
+            } else if (type === 'relay') {
+                localStorage.removeItem('sports_webapp_url_relay');
+                webAppUrlRelay = '';
+                inputId = 'webAppUrlRelayInput';
+            } else if (type === 'padang_acara') {
+                localStorage.removeItem('sports_webapp_url_padang_acara');
+                webAppUrlPadangAcara = '';
+                inputId = 'webAppUrlPadangAcaraInput';
+            }
+
+            const input = document.getElementById(inputId);
+            if (input) input.value = '';
+            setFieldSavedState(type, false);
+            updateBadge();
+            showToast(`URL Web App (${type}) telah dihapuskan.`, "info");
+        }
+
+        async function testApiUrl(type) {
+            let inputId = 'webAppUrlPadangInput';
+            let resultDivId = 'testUrlResultPadang';
+
+            if (type === 'balapan') { inputId = 'webAppUrlBalapanInput'; resultDivId = 'testUrlResultBalapan'; }
+            else if (type === 'relay') { inputId = 'webAppUrlRelayInput'; resultDivId = 'testUrlResultRelay'; }
+            else if (type === 'padang_acara') { inputId = 'webAppUrlPadangAcaraInput'; resultDivId = 'testUrlResultPadangAcara'; }
+
+            const input = document.getElementById(inputId);
+            const resultDiv = document.getElementById(resultDivId);
+
+            let url = input ? input.value.trim() : '';
+            if (!url) {
+                resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-rose-50 text-rose-700 border border-rose-200";
+                resultDiv.innerText = "Masukkan URL Web App dahulu.";
+                resultDiv.classList.remove('hidden');
+                return;
+            }
+
+            url = url.replace(/\/edit.*$/, '/exec');
+            resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-amber-50 text-amber-700 border border-amber-200";
+            resultDiv.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Menguji sambungan ${type}...`;
+            resultDiv.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${url}?t=${new Date().getTime()}`, { redirect: 'follow' });
+                const text = await response.text();
+                let data = JSON.parse(text);
+
+                if (data.status === 'success') {
+                    resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    resultDiv.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> <b>Sambungan Berjaya!</b> Google Sheets merespon.`;
+                } else {
+                    throw new Error(data.message || "Ralat tidak diketahui.");
+                }
+            } catch (err) {
+                resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-rose-50 text-rose-800 border border-rose-200";
+                resultDiv.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> <b>Sambungan Gagal:</b> ${err.message}`;
+            }
+        }
+
+        function copyGasCode(type) {
+            let codeText = GAS_CODE_PADANG;
+            if (type === 'balapan') codeText = GAS_CODE_BALAPAN;
+            else if (type === 'relay') codeText = GAS_CODE_RELAY;
+            else if (type === 'padang_acara') codeText = GAS_CODE_PADANG_ACARA;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            showToast(`Kod Apps Script (${type}) berjaya disalin!`, "success");
+        }
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            let bgStyle = "bg-slate-900 text-white border-slate-700";
+            let icon = "fa-info-circle text-blue-400";
+
+            if (type === 'success') {
+                bgStyle = "bg-emerald-900 text-emerald-100 border-emerald-700";
+                icon = "fa-circle-check text-emerald-400";
+            } else if (type === 'error') {
+                bgStyle = "bg-rose-950 text-rose-100 border-rose-800";
+                icon = "fa-circle-exclamation text-rose-400";
+            }
+
+            toast.className = `p-3.5 rounded-2xl border shadow-xl text-xs flex items-center gap-3 transition-all transform translate-y-2 opacity-0 ${bgStyle}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-base"></i>
+                <span class="font-semibold flex-grow">${message}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 50);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function showAutoSyncSpinner(show) {
+            const spinner = document.getElementById('autoSyncSpinner');
+            if (!spinner) return;
+            if (show) {
+                spinner.classList.remove('hidden');
+                spinner.classList.add('flex');
+            } else {
+                spinner.classList.add('hidden');
+                spinner.classList.remove('flex');
+            }
+        }
+
+        function updateBadge() {
+            const badge = document.getElementById('connectionBadge');
+            if (!badge) return;
+
+            const activeServices = [webAppUrlPadang, webAppUrlBalapan, webAppUrlRelay, webAppUrlPadangAcara].filter(Boolean).length;
+
+            if (activeServices > 0) {
+                badge.className = "hidden sm:flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-400 shadow-sm";
+                badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>Live (${activeServices}/4)</span>`;
+            } else {
+                badge.className = "hidden sm:flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-400";
+                badge.innerHTML = `<i class="fa-solid fa-flask"></i><span>Mod Demo</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
