@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Dashboard Kejohanan Olahraga - Two-Way Sync</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -12,6 +17,7 @@
             font-family: 'Inter', sans-serif; 
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         h1, h2, h3, .font-heading { font-family: 'Montserrat', sans-serif; }
         
@@ -29,9 +35,15 @@
             background: #f1f5f9;
             border-radius: 8px;
         }
+        body.dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 8px;
+        }
+        body.dark ::-webkit-scrollbar-thumb {
+            background: #475569;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
@@ -45,6 +57,64 @@
             input[type="text"], input[type="password"], input[type="url"], select {
                 font-size: 13px !important;
             }
+        }
+
+        /* Dark Mode Custom Overrides */
+        body.dark {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+        }
+        body.dark .bg-white {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+        body.dark .bg-slate-100 {
+            background-color: #0f172a !important;
+        }
+        body.dark .bg-slate-50 {
+            background-color: #1e293b !important;
+            color: #f8fafc !important;
+        }
+        body.dark .text-slate-800, 
+        body.dark .text-slate-900, 
+        body.dark .text-slate-700,
+        body.dark .text-slate-600 {
+            color: #f1f5f9 !important;
+        }
+        body.dark .text-slate-500,
+        body.dark .text-slate-400 {
+            color: #94a3b8 !important;
+        }
+        body.dark .border-slate-200,
+        body.dark .border-slate-100,
+        body.dark .border-slate-300 {
+            border-color: #334155 !important;
+        }
+        body.dark input[type="text"], 
+        body.dark input[type="password"], 
+        body.dark input[type="url"], 
+        body.dark select {
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+        body.dark table thead {
+            background-color: #0f172a !important;
+            color: #cbd5e1 !important;
+            border-color: #334155 !important;
+        }
+        body.dark table tbody tr:hover {
+            background-color: #334155 !important;
+        }
+        body.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+        body.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+            border-color: #334155 !important;
+        }
+        body.dark .bg-slate-200,
+        body.dark .bg-slate-200\/70 {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
         }
     </style>
 </head>
@@ -256,6 +326,11 @@ function getColLetter(colIndex) {
                     <i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i>
                     <span>Menyimpan...</span>
                 </div>
+
+                <!-- Theme Toggle Button (Mod Terang/Gelap) -->
+                <button onclick="toggleDarkMode()" title="Tukar Mod Terang / Gelap" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center min-h-[36px] min-w-[36px]">
+                    <i id="themeToggleIcon" class="fa-solid fa-moon text-xs sm:text-sm"></i>
+                </button>
 
                 <!-- Refresh Button -->
                 <button onclick="fetchDataFromBackend(true)" title="Segarkan Data" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center min-h-[36px] min-w-[36px]">
@@ -633,6 +708,11 @@ function getColLetter(colIndex) {
 
     </main>
 
+    <!-- Footer Copyright -->
+    <footer class="mt-auto py-4 text-center text-xs text-slate-500 border-t border-slate-200">
+        <p class="font-semibold">Hak Cipta Terpelihara @ 2026 eL_mioZ Cartel</p>
+    </footer>
+
     <div id="loginOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-8 shadow-2xl border border-slate-100 relative my-auto">
             <div class="text-center mb-5 sm:mb-6">
@@ -807,6 +887,7 @@ function getColLetter(colIndex) {
                 </div>
             </div>
 
+            <!-- Sub-tab 3: Sejarah & Log Aktiviti -->
             <div id="adminTabContent-logs" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h3 class="font-bold text-xs sm:text-sm text-slate-800">Sejarah & Rekod Log Aktiviti</h3>
@@ -938,7 +1019,36 @@ function getColLetter(colIndex) {
                 .catch(() => { clientIpAddress = "127.0.0.1"; });
         }
 
+        // --- Dark Mode / Light Mode Logic ---
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('sports_theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+            logActivity('Tetapan Tema', `Tukar tema kepada ${isDark ? 'Mod Gelap' : 'Mod Terang'}`, 'Berjaya');
+            showToast(`Bertukar ke ${isDark ? 'Mod Gelap' : 'Mod Terang'}`, "info");
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('themeToggleIcon');
+            if (icon) {
+                icon.className = isDark ? 'fa-solid fa-sun text-amber-400 text-xs sm:text-sm' : 'fa-solid fa-moon text-xs sm:text-sm';
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('sports_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+            if (isDark) {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+            updateThemeIcon(isDark);
+        }
+
         window.onload = function() {
+            initTheme();
             detectClientIp();
             checkUserAuth();
             initializeMockDataset();
