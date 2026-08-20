@@ -268,7 +268,7 @@ function getColLetter(colIndex) {
                     <span class="hidden sm:inline">Tetapan Admin</span>
                 </button>
 
-                <!-- User Profile Header Section (Clean: Displays Name & Logout Button) -->
+                <!-- User Profile Header Section -->
                 <div id="headerUserInfo" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs min-h-[36px]">
                     <i class="fa-solid fa-user-circle text-blue-400 text-sm"></i>
                     <span id="headerUserName" class="font-bold text-slate-200 truncate max-w-[100px] sm:max-w-[150px]">Tetamu</span>
@@ -300,9 +300,9 @@ function getColLetter(colIndex) {
                     <i class="fa-solid fa-crown text-xl sm:text-2xl"></i>
                 </div>
                 <div>
-                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block">Pendahulu Ranking (Akhir Balapan)</span>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block">Pendahulu Ranking (Akhir Balapan, Relay & Padang)</span>
                     <h3 id="statLeader" class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">Rumah Garuda (0 Emas)</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Dikira dari Akhir Balapan</p>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Dikira dari Akhir Balapan, Relay & Padang</p>
                 </div>
             </div>
         </div>
@@ -328,9 +328,7 @@ function getColLetter(colIndex) {
         <div id="mainTabContent-padang" class="space-y-5 sm:space-y-6">
             <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
                 <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Saringan:</span>
-                <div id="saringanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x">
-                    <!-- Dynamic Event Selector Buttons -->
-                </div>
+                <div id="saringanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
             </div>
 
             <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
@@ -438,9 +436,7 @@ function getColLetter(colIndex) {
         <div id="mainTabContent-balapan" class="space-y-5 sm:space-y-6 hidden">
             <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
                 <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Akhir Balapan:</span>
-                <div id="balapanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x">
-                    <!-- Dynamic Event Selector Buttons -->
-                </div>
+                <div id="balapanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
             </div>
 
             <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
@@ -452,7 +448,6 @@ function getColLetter(colIndex) {
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-                    <!-- Male Final Track Table -->
                     <div>
                         <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 px-3 py-2 rounded-xl border border-blue-200/60 flex items-center gap-2 mb-3">
                             <i class="fa-solid fa-mars text-blue-600"></i> Akhir Lelaki
@@ -474,7 +469,6 @@ function getColLetter(colIndex) {
                         </div>
                     </div>
 
-                    <!-- Female Final Track Table -->
                     <div>
                         <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 px-3 py-2 rounded-xl border border-rose-200/60 flex items-center gap-2 mb-3">
                             <i class="fa-solid fa-venus text-rose-600"></i> Akhir Perempuan
@@ -502,9 +496,7 @@ function getColLetter(colIndex) {
         <div id="mainTabContent-relay" class="space-y-5 sm:space-y-6 hidden">
             <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
                 <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Relay:</span>
-                <div id="relayEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x">
-                    <!-- Dynamic Relay Event Selector Buttons -->
-                </div>
+                <div id="relayEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
             </div>
 
             <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
@@ -560,9 +552,7 @@ function getColLetter(colIndex) {
         <div id="mainTabContent-padang_acara" class="space-y-5 sm:space-y-6 hidden">
             <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
                 <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Padang:</span>
-                <div id="padangAcaraEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x">
-                    <!-- Dynamic Padang Event Selector Buttons -->
-                </div>
+                <div id="padangAcaraEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
             </div>
 
             <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
@@ -635,11 +625,9 @@ function getColLetter(colIndex) {
             <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-slate-200">
                 <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2 mb-4">
                     <i class="fa-solid fa-chart-line text-emerald-600"></i>
-                    Kedudukan & Pungutan Pingat Rumah Sukan (Eksklusif Akhir Balapan)
+                    Kedudukan & Pungutan Pingat Rumah Sukan (Eksklusif Akhir Balapan, Relay & Padang)
                 </h2>
-                <div id="houseStatsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
-                    <!-- Dynamic House Stats -->
-                </div>
+                <div id="houseStatsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"></div>
             </div>
         </div>
 
@@ -685,7 +673,7 @@ function getColLetter(colIndex) {
     </div>
 
     <div id="setupModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto max-h-[92vh] overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto max-h-[92vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 mb-4">
                 <div class="flex items-center gap-2.5 sm:gap-3">
                     <div class="p-2 sm:p-2.5 bg-blue-50 text-blue-600 rounded-xl shrink-0">
@@ -819,7 +807,6 @@ function getColLetter(colIndex) {
                 </div>
             </div>
 
-            <!-- Sub-tab 3: Sejarah & Log Aktiviti -->
             <div id="adminTabContent-logs" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h3 class="font-bold text-xs sm:text-sm text-slate-800">Sejarah & Rekod Log Aktiviti</h3>
@@ -829,13 +816,15 @@ function getColLetter(colIndex) {
                 </div>
 
                 <div class="overflow-x-auto rounded-2xl border border-slate-200 max-h-80">
-                    <table class="w-full text-xs text-left min-w-[480px]">
+                    <table class="w-full text-xs text-left min-w-[680px]">
                         <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                             <tr>
                                 <th class="p-2.5 sm:p-3 w-32 sm:w-36">Masa & Tarikh</th>
                                 <th class="p-2.5 sm:p-3">Pengguna</th>
                                 <th class="p-2.5 sm:p-3">Kategori</th>
                                 <th class="p-2.5 sm:p-3">Butiran Aktiviti</th>
+                                <th class="p-2.5 sm:p-3 text-center">Status</th>
+                                <th class="p-2.5 sm:p-3">IP, Peranti & Sistem</th>
                             </tr>
                         </thead>
                         <tbody id="logsTableBody" class="divide-y divide-slate-100"></tbody>
@@ -885,6 +874,7 @@ function getColLetter(colIndex) {
         </div>
     </div>
 
+    <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-3"></div>
 
     <script>
@@ -905,6 +895,7 @@ function getColLetter(colIndex) {
         let webAppUrlPadangAcara = localStorage.getItem('sports_webapp_url_padang_acara') || '';
 
         let pendingSaveCount = 0;
+        let clientIpAddress = "127.0.0.1";
 
         let currentMainTab = 'padang'; 
         let currentSaringanEvent = '101'; 
@@ -920,7 +911,35 @@ function getColLetter(colIndex) {
         // Mock Local Dataset
         let dataset = {};
 
+        // Helper function for Client Device & System information
+        function getDeviceInfo() {
+            const ua = navigator.userAgent;
+            let os = "Desktop";
+            if (/android/i.test(ua)) os = "Android";
+            else if (/iPad|iPhone|iPod/.test(ua)) os = "iOS";
+            else if (/windows/i.test(ua)) os = "Windows";
+            else if (/mac/i.test(ua)) os = "macOS";
+            else if (/linux/i.test(ua)) os = "Linux";
+
+            let browser = "Browser";
+            if (/chrome|crios/i.test(ua)) browser = "Chrome";
+            else if (/firefox|fxios/i.test(ua)) browser = "Firefox";
+            else if (/safari/i.test(ua) && !/chrome/i.test(ua)) browser = "Safari";
+            else if (/edg/i.test(ua)) browser = "Edge";
+
+            return `${clientIpAddress} • ${os} (${browser})`;
+        }
+
+        // Fetch client IP in background
+        function detectClientIp() {
+            fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => { if (data && data.ip) clientIpAddress = data.ip; })
+                .catch(() => { clientIpAddress = "127.0.0.1"; });
+        }
+
         window.onload = function() {
+            detectClientIp();
             checkUserAuth();
             initializeMockDataset();
 
@@ -965,6 +984,7 @@ function getColLetter(colIndex) {
                     const errText = document.getElementById('loginErrorText');
                     if (errText) errText.innerText = "Akaun anda telah dinyahaktifkan.";
                     errorMsg?.classList.remove('hidden');
+                    logActivity('Log Masuk Gagal', `Percubaan log masuk untuk akaun dinyahaktifkan (${idInput})`, 'Gagal');
                     return;
                 }
 
@@ -974,18 +994,19 @@ function getColLetter(colIndex) {
                 errorMsg?.classList.add('hidden');
 
                 updateUserHeaderUI();
-                logActivity('Log Masuk', `Pengguna ${currentUser.name} (${currentUser.id}) berjaya log masuk.`);
+                logActivity('Log Masuk', `Pengguna ${currentUser.name} (${currentUser.id}) berjaya log masuk.`, 'Berjaya');
                 showToast(`Selamat datang, ${currentUser.name}!`, "success");
             } else {
                 const errText = document.getElementById('loginErrorText');
                 if (errText) errText.innerText = "ID atau Kata Laluan tidak sah.";
                 errorMsg?.classList.remove('hidden');
+                logActivity('Log Masuk Gagal', `ID/Kata Laluan tidak sah dimasukkan (${idInput || '-'})`, 'Gagal');
             }
         }
 
         function handleLogout() {
             if (currentUser) {
-                logActivity('Log Keluar', `Pengguna ${currentUser.name} (${currentUser.id}) telah log keluar.`);
+                logActivity('Log Keluar', `Pengguna ${currentUser.name} (${currentUser.id}) telah log keluar.`, 'Berjaya');
             }
             currentUser = null;
             sessionStorage.removeItem('sports_current_user');
@@ -1143,11 +1164,11 @@ function getColLetter(colIndex) {
 
             if (index === -1) {
                 usersList.push({ name, id, pass, role, status });
-                logActivity('Pengurusan Pengguna', `Menambah pengguna: ${name} (${id})`);
+                logActivity('Pengurusan Pengguna', `Menambah pengguna: ${name} (${id})`, 'Berjaya');
                 showToast(`Pengguna ${name} berjaya ditambah!`, "success");
             } else {
                 usersList[index] = { name, id, pass, role, status };
-                logActivity('Pengurusan Pengguna', `Mengemaskini pengguna: ${name} (${id})`);
+                logActivity('Pengurusan Pengguna', `Mengemaskini pengguna: ${name} (${id})`, 'Berjaya');
                 showToast(`Pengguna ${name} berjaya dikemaskini!`, "success");
             }
 
@@ -1163,19 +1184,21 @@ function getColLetter(colIndex) {
             if (confirm(`Adakah anda pasti mahu menghapuskan ${u.name}?`)) {
                 usersList.splice(index, 1);
                 localStorage.setItem('sports_users_list', JSON.stringify(usersList));
-                logActivity('Pengurusan Pengguna', `Menghapuskan pengguna: ${u.name} (${u.id})`);
+                logActivity('Pengurusan Pengguna', `Menghapuskan pengguna: ${u.name} (${u.id})`, 'Berjaya');
                 showToast("Pengguna berjaya dihapuskan.", "info");
                 renderUsersTable();
             }
         }
 
-        function logActivity(kategori, butiran) {
+        function logActivity(kategori, butiran, status = "Berjaya") {
             const newLog = {
                 timestamp: new Date().toLocaleString(),
                 userName: currentUser ? currentUser.name : 'Sistem',
                 userId: currentUser ? currentUser.id : '-',
                 kategori: kategori,
-                butiran: butiran
+                butiran: butiran,
+                status: status,
+                deviceInfo: getDeviceInfo()
             };
 
             activityLogs.unshift(newLog);
@@ -1188,18 +1211,25 @@ function getColLetter(colIndex) {
             if (!tbody) return;
 
             if (activityLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">Tiada log aktiviti direkodkan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Tiada log aktiviti direkodkan.</td></tr>`;
                 return;
             }
 
             let html = '';
             activityLogs.forEach(l => {
+                const logStatus = l.status || "Berjaya";
+                const isSuccess = logStatus === "Berjaya" || logStatus.includes("OK") || logStatus.toLowerCase().includes("berjaya");
+                const statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isSuccess ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${logStatus}</span>`;
+                const deviceText = l.deviceInfo || getDeviceInfo();
+
                 html += `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="py-2.5 px-3 sm:px-4 font-mono text-slate-500 text-[11px]">${l.timestamp}</td>
                         <td class="py-2.5 px-3 font-bold text-slate-800">${l.userName} (${l.userId})</td>
                         <td class="py-2.5 px-3 font-semibold text-blue-600">${l.kategori}</td>
                         <td class="py-2.5 px-3 sm:px-4 text-slate-700">${l.butiran}</td>
+                        <td class="py-2.5 px-3 text-center">${statusBadge}</td>
+                        <td class="py-2.5 px-3 sm:px-4 font-mono text-slate-600 text-[11px]">${deviceText}</td>
                     </tr>
                 `;
             });
@@ -1433,7 +1463,7 @@ function getColLetter(colIndex) {
             else if (type === 'relay') targetUrl = webAppUrlRelay;
             else if (type === 'padang_acara') targetUrl = webAppUrlPadangAcara;
 
-            logActivity('Kemaskini Sel', `[${eventName}] Baris ${rowIndex}, Lajur ${colIndex} = "${value}" oleh ${currentUser ? currentUser.name : 'Pengguna'}`);
+            logActivity('Kemaskini Sel', `[${eventName}] Baris ${rowIndex}, Lajur ${colIndex} = "${value}"`, 'Berjaya');
 
             if (!targetUrl) {
                 setTimeout(() => {
@@ -1456,9 +1486,11 @@ function getColLetter(colIndex) {
                     showToast("Data berjaya disimpan ke Google Sheets!", "success");
                 } else {
                     showToast(`Ralat: ${result.message}`, "error");
+                    logActivity('Kemaskini Sel Gagal', `[${eventName}] ${result.message}`, 'Gagal');
                 }
             } catch (err) {
                 showToast(`Gagal menyambung: ${err.message}`, "error");
+                logActivity('Ralat Sambungan', `[${eventName}] ${err.message}`, 'Gagal');
             } finally {
                 pendingSaveCount = Math.max(0, pendingSaveCount - 1);
                 if (pendingSaveCount === 0) showAutoSyncSpinner(false);
@@ -1466,7 +1498,7 @@ function getColLetter(colIndex) {
         }
 
         function updateLocalDatasetCell(eventName, category, rowIndex, colIndex, value) {
-            // Optimistic update of local dataset
+            // Optimistic local updates
         }
 
         async function fetchDataFromBackend(isManual = false) {
@@ -1482,21 +1514,28 @@ function getColLetter(colIndex) {
                 Kenyalang: { gold: 0, silver: 0, bronze: 0 }
             };
 
-            AKHIR_SHEETS.forEach(sName => {
-                const ev = dataset[sName];
-                [ev?.male, ev?.female].forEach(list => {
-                    if (!list) return;
-                    list.forEach(row => {
-                        const normHouse = normalizeHouseName(row.house);
-                        const r = parseInt(row.rank);
-                        if (houseMedals[normHouse]) {
-                            if (r === 1) houseMedals[normHouse].gold++;
-                            else if (r === 2) houseMedals[normHouse].silver++;
-                            else if (r === 3) houseMedals[normHouse].bronze++;
-                        }
+            const tallyEvents = (sheets) => {
+                sheets.forEach(sName => {
+                    const ev = dataset[sName];
+                    if (!ev) return;
+                    [ev.male, ev.female].forEach(list => {
+                        if (!list) return;
+                        list.forEach(row => {
+                            const normHouse = normalizeHouseName(row.house);
+                            const r = parseInt(row.rank);
+                            if (houseMedals[normHouse]) {
+                                if (r === 1) houseMedals[normHouse].gold++;
+                                else if (r === 2) houseMedals[normHouse].silver++;
+                                else if (r === 3) houseMedals[normHouse].bronze++;
+                            }
+                        });
                     });
                 });
-            });
+            };
+
+            tallyEvents(AKHIR_SHEETS);
+            tallyEvents(RELAY_SHEETS);
+            tallyEvents(PADANG_ACARA_SHEETS);
 
             let leaderHouse = 'Garuda';
             let maxGold = -1;
@@ -1529,21 +1568,28 @@ function getColLetter(colIndex) {
                 Kenyalang: { gold: 0, silver: 0, bronze: 0, points: 0 }
             };
 
-            AKHIR_SHEETS.forEach(sName => {
-                const ev = dataset[sName];
-                [ev?.male, ev?.female].forEach(list => {
-                    if (!list) return;
-                    list.forEach(row => {
-                        const normHouse = normalizeHouseName(row.house);
-                        const r = parseInt(row.rank);
-                        if (houseMedals[normHouse]) {
-                            if (r === 1) { houseMedals[normHouse].gold++; houseMedals[normHouse].points += 5; }
-                            else if (r === 2) { houseMedals[normHouse].silver++; houseMedals[normHouse].points += 3; }
-                            else if (r === 3) { houseMedals[normHouse].bronze++; houseMedals[normHouse].points += 1; }
-                        }
+            const tallyEvents = (sheets) => {
+                sheets.forEach(sName => {
+                    const ev = dataset[sName];
+                    if (!ev) return;
+                    [ev.male, ev.female].forEach(list => {
+                        if (!list) return;
+                        list.forEach(row => {
+                            const normHouse = normalizeHouseName(row.house);
+                            const r = parseInt(row.rank);
+                            if (houseMedals[normHouse]) {
+                                if (r === 1) { houseMedals[normHouse].gold++; houseMedals[normHouse].points += 5; }
+                                else if (r === 2) { houseMedals[normHouse].silver++; houseMedals[normHouse].points += 3; }
+                                else if (r === 3) { houseMedals[normHouse].bronze++; houseMedals[normHouse].points += 1; }
+                            }
+                        });
                     });
                 });
-            });
+            };
+
+            tallyEvents(AKHIR_SHEETS);
+            tallyEvents(RELAY_SHEETS);
+            tallyEvents(PADANG_ACARA_SHEETS);
 
             grid.innerHTML = houses.map(h => {
                 const stats = houseMedals[h.name];
@@ -1591,6 +1637,7 @@ function getColLetter(colIndex) {
                 else if (type === 'padang_acara') { localStorage.setItem('sports_webapp_url_padang_acara', url); webAppUrlPadangAcara = url; }
 
                 setFieldSavedState(type, true);
+                logActivity('Tetapan API', `Menyimpan URL Web App [${type}]`, 'Berjaya');
                 showToast(`URL Web App (${type}) berjaya disimpan!`, "success");
                 updateBadge();
             } else {
@@ -1611,6 +1658,7 @@ function getColLetter(colIndex) {
             if (input) input.value = '';
             setFieldSavedState(type, false);
             updateBadge();
+            logActivity('Tetapan API', `Menghapus URL Web App [${type}]`, 'Berjaya');
             showToast(`URL Web App (${type}) dihapuskan.`, "info");
         }
 
@@ -1667,6 +1715,7 @@ function getColLetter(colIndex) {
                         resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-emerald-50 text-emerald-800 border border-emerald-200";
                         resultDiv.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> <b>Sambungan Berjaya!</b> Google Sheets merespon.`;
                     }
+                    logActivity('Ujian API', `Sambungan API [${type}] berjaya`, 'Berjaya');
                 } else {
                     throw new Error(data.message || "Ralat tidak diketahui.");
                 }
@@ -1675,6 +1724,7 @@ function getColLetter(colIndex) {
                     resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-rose-50 text-rose-800 border border-rose-200";
                     resultDiv.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> <b>Sambungan Gagal:</b> ${err.message}`;
                 }
+                logActivity('Ujian API Gagal', `Sambungan API [${type}] gagal: ${err.message}`, 'Gagal');
             }
         }
 
@@ -1690,6 +1740,7 @@ function getColLetter(colIndex) {
             temp.select();
             document.execCommand('copy');
             document.body.removeChild(temp);
+            logActivity('Salin Kod GAS', `Salin kod Google Apps Script [${type}]`, 'Berjaya');
             showToast(`Kod Apps Script (${type}) berjaya disalin!`, "success");
         }
 
