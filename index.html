@@ -3,15 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Dashboard Kejohanan Olahraga - Two-Way Sync</title>
+    <title>Hub Digital Keputusan Rasmi - Two-Way Sync</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class'
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.08)',
+                        'glow-blue': '0 0 20px -3px rgba(59, 130, 246, 0.3)',
+                    }
+                }
+            }
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
@@ -21,35 +34,32 @@
         }
         h1, h2, h3, .font-heading { font-family: 'Montserrat', sans-serif; }
         
-        /* Smooth momentum scrolling for iOS & Android */
         .overflow-x-auto, .overflow-y-auto {
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Responsive custom scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 8px;
+            background: rgba(241, 245, 249, 0.6);
+            border-radius: 9999px;
         }
         body.dark ::-webkit-scrollbar-track {
-            background: #1e293b;
+            background: rgba(15, 23, 42, 0.6);
         }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 8px;
+            border-radius: 9999px;
         }
         body.dark ::-webkit-scrollbar-thumb {
-            background: #475569;
+            background: #334155;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
 
-        /* Touch input optimizations to prevent iOS Safari auto-zoom */
         input[type="text"], input[type="password"], input[type="url"], select {
             font-size: 14px !important;
         }
@@ -59,21 +69,20 @@
             }
         }
 
-        /* Dark Mode Custom Overrides */
         body.dark {
-            background-color: #0f172a !important;
+            background-color: #090d16 !important;
             color: #f8fafc !important;
         }
         body.dark .bg-white {
-            background-color: #1e293b !important;
+            background-color: #111827 !important;
             color: #f8fafc !important;
-            border-color: #334155 !important;
+            border-color: #1f2937 !important;
         }
         body.dark .bg-slate-100 {
-            background-color: #0f172a !important;
+            background-color: #090d16 !important;
         }
         body.dark .bg-slate-50 {
-            background-color: #1e293b !important;
+            background-color: #111827 !important;
             color: #f8fafc !important;
         }
         body.dark .text-slate-800, 
@@ -89,31 +98,31 @@
         body.dark .border-slate-200,
         body.dark .border-slate-100,
         body.dark .border-slate-300 {
-            border-color: #334155 !important;
+            border-color: #1f2937 !important;
         }
         body.dark input[type="text"], 
         body.dark input[type="password"], 
         body.dark input[type="url"], 
         body.dark select {
-            background-color: #0f172a !important;
+            background-color: #0b1120 !important;
             color: #f8fafc !important;
-            border-color: #475569 !important;
+            border-color: #374151 !important;
         }
         body.dark table thead {
             background-color: #0f172a !important;
             color: #cbd5e1 !important;
-            border-color: #334155 !important;
+            border-color: #1f2937 !important;
         }
         body.dark table tbody tr:hover {
-            background-color: #334155 !important;
+            background-color: #1e293b !important;
         }
         body.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
         body.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
-            border-color: #334155 !important;
+            border-color: #1f2937 !important;
         }
         body.dark .bg-slate-200,
         body.dark .bg-slate-200\/70 {
-            background-color: #334155 !important;
+            background-color: #1e293b !important;
             color: #f8fafc !important;
         }
     </style>
@@ -261,7 +270,7 @@ function getColLetter(colIndex) {
 
         const GAS_CODE_PADANG_ACARA = `function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetNames = ["LOMPAT JAUH", "LOMPAT TINGGI", "LONTAR PELURU"];
+  var sheetNames = ["LongJump", "HighJump", "ShotPut"];
   var eventsData = {};
   sheetNames.forEach(function(sName) {
     var sheet = ss.getSheetByName(sName);
@@ -300,54 +309,53 @@ function getColLetter(colIndex) {
 }`;
     </script>
 
-    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-30 pt-safe">
-        <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-2.5">
-            <div class="flex items-center gap-2.5 sm:gap-3">
-                <div class="bg-gradient-to-tr from-blue-600 to-indigo-500 p-2 sm:p-2.5 rounded-2xl shadow-md shrink-0">
+    <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl sticky top-0 z-30 pt-safe">
+        <div class="max-w-7xl mx-auto px-3.5 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 p-2.5 sm:p-3 rounded-2xl shadow-glow-blue shrink-0 transform transition-transform duration-300 hover:scale-105">
                     <i class="fa-solid fa-trophy text-white text-lg sm:text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-black text-sm sm:text-lg tracking-wide uppercase leading-tight text-white">Hub Digital Kejohanan Olahraga</h1>
-                    <div class="flex items-center gap-1.5 text-[11px] sm:text-xs text-slate-300">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                        <span class="truncate">Keputusan Rasmi Kejohanan (Two-Way Sync)</span>
+                    <h1 class="font-black text-sm sm:text-lg tracking-wider uppercase leading-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                        Hub Digital Keputusan Rasmi
+                    </h1>
+                    <div class="flex items-center gap-2 text-[11px] sm:text-xs text-slate-400 font-medium">
+                        <span class="relative flex h-2 w-2 shrink-0">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="truncate tracking-wide">Keputusan Rasmi Kejohanan Two-Way Sync</span>
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center gap-2 flex-wrap ml-auto">
-                <!-- Status Badge -->
-                <div id="connectionBadge" class="hidden sm:flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold text-amber-400 shadow-xs">
+                <div id="connectionBadge" class="hidden sm:flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-400 shadow-sm backdrop-blur-sm">
                     <i class="fa-solid fa-flask"></i><span>Mod Demo</span>
                 </div>
 
-                <!-- Auto Sync Spinner -->
-                <div id="autoSyncSpinner" class="hidden items-center gap-1.5 bg-blue-900/80 border border-blue-700/80 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-medium text-blue-200">
+                <div id="autoSyncSpinner" class="hidden items-center gap-2 bg-blue-950/80 border border-blue-600/60 px-3 py-1.5 rounded-full text-xs font-semibold text-blue-300 shadow-sm animate-pulse">
                     <i class="fa-solid fa-circle-notch fa-spin text-blue-400"></i>
                     <span>Menyimpan...</span>
                 </div>
 
-                <!-- Theme Toggle Button (Mod Terang/Gelap) -->
-                <button onclick="toggleDarkMode()" title="Tukar Mod Terang / Gelap" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center min-h-[36px] min-w-[36px]">
+                <button onclick="toggleDarkMode()" title="Tukar Mod Terang / Gelap" class="p-2.5 bg-slate-800/90 hover:bg-slate-700 text-slate-200 rounded-2xl border border-slate-700/80 transition-all active:scale-95 flex items-center justify-center min-h-[38px] min-w-[38px] shadow-sm">
                     <i id="themeToggleIcon" class="fa-solid fa-moon text-xs sm:text-sm"></i>
                 </button>
 
-                <!-- Refresh Button -->
-                <button onclick="fetchDataFromBackend(true)" title="Segarkan Data" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-700 transition active:scale-95 flex items-center justify-center min-h-[36px] min-w-[36px]">
+                <button onclick="fetchDataFromBackend(true)" title="Segarkan Data" class="p-2.5 bg-slate-800/90 hover:bg-slate-700 text-slate-200 rounded-2xl border border-slate-700/80 transition-all active:scale-95 flex items-center justify-center min-h-[38px] min-w-[38px] shadow-sm">
                     <i id="refreshIcon" class="fa-solid fa-rotate-right text-xs sm:text-sm"></i>
                 </button>
 
-                <!-- Admin Settings Button -->
-                <button onclick="toggleSetupModal()" title="Tetapan Admin" class="p-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs transition active:scale-95 flex items-center gap-1.5 shadow-sm min-h-[36px]">
+                <button onclick="toggleSetupModal()" title="Tetapan Admin" class="p-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-xs transition-all active:scale-95 flex items-center gap-2 shadow-md hover:shadow-glow-blue min-h-[38px]">
                     <i class="fa-solid fa-gear"></i>
                     <span class="hidden sm:inline">Tetapan Admin</span>
                 </button>
 
-                <!-- User Profile Header Section -->
-                <div id="headerUserInfo" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-xs min-h-[36px]">
+                <div id="headerUserInfo" class="flex items-center gap-2 bg-slate-800/90 border border-slate-700/80 px-3 py-1.5 rounded-2xl text-xs min-h-[38px] shadow-sm">
                     <i class="fa-solid fa-user-circle text-blue-400 text-sm"></i>
                     <span id="headerUserName" class="font-bold text-slate-200 truncate max-w-[100px] sm:max-w-[150px]">Tetamu</span>
-                    <button onclick="handleLogout()" class="ml-1 text-slate-400 hover:text-rose-400 transition active:scale-95 p-1" title="Log Keluar">
+                    <button onclick="handleLogout()" class="ml-1 text-slate-400 hover:text-rose-400 transition-colors active:scale-95 p-1" title="Log Keluar">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
@@ -355,83 +363,81 @@ function getColLetter(colIndex) {
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 flex-grow w-full">
+    <main class="max-w-7xl mx-auto px-3.5 sm:px-6 py-5 sm:py-8 flex-grow w-full">
         
-        <!-- 2-Column Summary Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-5 sm:mb-6">
-            <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex items-center gap-3.5">
-                <div class="p-2.5 sm:p-3 bg-blue-50 text-blue-600 rounded-2xl shrink-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-6 sm:mb-8">
+            <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-glass border border-slate-200/80 flex items-center gap-4 transition-all hover:shadow-lg">
+                <div class="p-3.5 sm:p-4 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 text-blue-600 rounded-2xl shrink-0 border border-blue-500/20">
                     <i class="fa-solid fa-arrows-rotate text-xl sm:text-2xl"></i>
                 </div>
                 <div>
-                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block">Penyegerakan Data</span>
-                    <h3 id="statSyncText" class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">2-Way Single Cell Active</h3>
-                    <p id="statLastUpdate" class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Kemas kini: Hari ini</p>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest block">Data Kejohanan</span>
+                    <h3 id="statSyncText" class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 mt-0.5">2-Way SYNC Active</h3>
+                    <p id="statLastUpdate" class="text-[11px] sm:text-xs text-slate-500 mt-0.5 font-medium">Kemas kini: Hari ini</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-xs border border-slate-200 flex items-center gap-3.5">
-                <div class="p-2.5 sm:p-3 bg-amber-50 text-amber-600 rounded-2xl shrink-0">
+            <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-glass border border-slate-200/80 flex items-center gap-4 transition-all hover:shadow-lg">
+                <div class="p-3.5 sm:p-4 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 text-amber-600 rounded-2xl shrink-0 border border-amber-500/20">
                     <i class="fa-solid fa-crown text-xl sm:text-2xl"></i>
                 </div>
                 <div>
-                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block">Pendahulu Ranking (Akhir Balapan, Relay & Padang)</span>
-                    <h3 id="statLeader" class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">Rumah Garuda (0 Emas)</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">Dikira dari Akhir Balapan, Relay & Padang</p>
+                    <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest block">Pendahulu Ranking</span>
+                    <h3 id="statLeader" class="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 mt-0.5">Rumah <span class="text-red-600 dark:text-red-400 font-extrabold">Garuda</span> (0 Emas)</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 font-medium">Dikira dari Acara Akhir Balapan, Relay & Padang</p>
                 </div>
             </div>
         </div>
 
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 mb-5 sm:mb-6 border-b border-slate-200 touch-pan-x">
-            <button id="tabBtn-padang" onclick="switchMainTab('padang')" class="py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-blue-600 text-white shadow-sm active:scale-95">
+        <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 sm:mb-8 border-b border-slate-200/80 dark:border-slate-800 touch-pan-x">
+            <button id="tabBtn-padang" onclick="switchMainTab('padang')" class="py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 active:scale-95">
                 <i class="fa-solid fa-stopwatch"></i> Acara Saringan
             </button>
-            <button id="tabBtn-balapan" onclick="switchMainTab('balapan')" class="py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200 active:scale-95">
+            <button id="tabBtn-balapan" onclick="switchMainTab('balapan')" class="py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200/60 active:scale-95">
                 <i class="fa-solid fa-flag-checkered"></i> Akhir Balapan
             </button>
-            <button id="tabBtn-relay" onclick="switchMainTab('relay')" class="py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200 active:scale-95">
+            <button id="tabBtn-relay" onclick="switchMainTab('relay')" class="py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200/60 active:scale-95">
                 <i class="fa-solid fa-person-running"></i> Acara Relay
             </button>
-            <button id="tabBtn-padang_acara" onclick="switchMainTab('padang_acara')" class="py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200 active:scale-95">
+            <button id="tabBtn-padang_acara" onclick="switchMainTab('padang_acara')" class="py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200/60 active:scale-95">
                 <i class="fa-solid fa-arrows-left-right-to-line"></i> Acara Padang
             </button>
-            <button id="tabBtn-rumusan" onclick="switchMainTab('rumusan')" class="py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200 active:scale-95">
-                <i class="fa-solid fa-chart-pie"></i> Rumusan & Carta
+            <button id="tabBtn-pingat" onclick="switchMainTab('pingat')" class="py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200/60 active:scale-95">
+                <i class="fa-solid fa-chart-pie"></i> Kedudukan Pingat
             </button>
         </div>
 
-        <div id="mainTabContent-padang" class="space-y-5 sm:space-y-6">
-            <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Saringan:</span>
-                <div id="saringanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
+        <div id="mainTabContent-padang" class="space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Pilih Acara Saringan:</span>
+                <div id="saringanEventSelector" class="flex flex-wrap gap-2 touch-pan-x"></div>
             </div>
 
-            <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2">
+            <div class="bg-white rounded-3xl p-4 sm:p-7 shadow-glass border border-slate-200/80 space-y-6">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2.5">
                         <i class="fa-solid fa-stopwatch text-blue-600"></i>
-                        Acara <span id="currentSaringanSheetBadge" class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-lg text-xs sm:text-sm font-black">101</span> - Saringan
+                        Acara <span id="currentSaringanSheetBadge" class="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-black">101</span> - Saringan
                     </h2>
                 </div>
 
-                <!-- Saringan Male Tables -->
-                <div class="space-y-4">
-                    <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 px-3 py-2 rounded-xl border border-blue-200/60 flex items-center gap-2">
+                <div class="space-y-5">
+                    <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 dark:bg-blue-950/40 dark:text-blue-300 px-4 py-2.5 rounded-2xl border border-blue-200/60 dark:border-blue-900/60 flex items-center gap-2">
                         <i class="fa-solid fa-mars text-blue-600"></i> Kategori Lelaki
                     </h3>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                            <span class="text-[11px] sm:text-xs font-bold text-slate-500 block mb-2">Saringan 1 (Julat A5:G12 / A5:G8)</span>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Saringan 1 (Julat A5:G12 / A5:G8)</span>
+                            <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                                 <table class="w-full text-xs text-left min-w-[340px]">
-                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                         <tr>
-                                            <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                            <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                            <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                            <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                            <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableSaringanMale1" class="divide-y divide-slate-100"></tbody>
@@ -440,17 +446,17 @@ function getColLetter(colIndex) {
                         </div>
 
                         <div>
-                            <span class="text-[11px] sm:text-xs font-bold text-slate-500 block mb-2">Saringan 2 (Julat A18:G25 / A14:G17)</span>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Saringan 2 (Julat A18:G25 / A14:G17)</span>
+                            <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                                 <table class="w-full text-xs text-left min-w-[340px]">
-                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                         <tr>
-                                            <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                            <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                            <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                            <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                            <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableSaringanMale2" class="divide-y divide-slate-100"></tbody>
@@ -460,24 +466,23 @@ function getColLetter(colIndex) {
                     </div>
                 </div>
 
-                <!-- Saringan Female Tables -->
-                <div class="space-y-4 pt-4 border-t border-slate-100">
-                    <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 px-3 py-2 rounded-xl border border-rose-200/60 flex items-center gap-2">
+                <div class="space-y-5 pt-5 border-t border-slate-100 dark:border-slate-800">
+                    <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 dark:bg-rose-950/40 dark:text-rose-300 px-4 py-2.5 rounded-2xl border border-rose-200/60 dark:border-rose-900/60 flex items-center gap-2">
                         <i class="fa-solid fa-venus text-rose-600"></i> Kategori Perempuan
                     </h3>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                            <span class="text-[11px] sm:text-xs font-bold text-slate-500 block mb-2">Saringan 1 (Julat I5:O12 / I5:O8)</span>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Saringan 1 (Julat I5:O12 / I5:O8)</span>
+                            <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                                 <table class="w-full text-xs text-left min-w-[340px]">
-                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                         <tr>
-                                            <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                            <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                            <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                            <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                            <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableSaringanFemale1" class="divide-y divide-slate-100"></tbody>
@@ -486,17 +491,17 @@ function getColLetter(colIndex) {
                         </div>
 
                         <div>
-                            <span class="text-[11px] sm:text-xs font-bold text-slate-500 block mb-2">Saringan 2 (Julat I18:O25 / I14:O17)</span>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Saringan 2 (Julat I18:O25 / I14:O17)</span>
+                            <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                                 <table class="w-full text-xs text-left min-w-[340px]">
-                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                    <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                         <tr>
-                                            <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                            <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                            <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                            <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                            <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                            <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                            <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableSaringanFemale2" class="divide-y divide-slate-100"></tbody>
@@ -508,35 +513,35 @@ function getColLetter(colIndex) {
             </div>
         </div>
 
-        <div id="mainTabContent-balapan" class="space-y-5 sm:space-y-6 hidden">
-            <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Akhir Balapan:</span>
-                <div id="balapanEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
+        <div id="mainTabContent-balapan" class="space-y-6 hidden">
+            <div class="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Pilih Acara Akhir Balapan:</span>
+                <div id="balapanEventSelector" class="flex flex-wrap gap-2 touch-pan-x"></div>
             </div>
 
-            <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2">
+            <div class="bg-white rounded-3xl p-4 sm:p-7 shadow-glass border border-slate-200/80 space-y-6">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2.5">
                         <i class="fa-solid fa-flag-checkered text-emerald-600"></i>
-                        Acara <span id="currentTrackSheetBadge" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-lg text-xs sm:text-sm font-black">101</span> - Akhir Balapan
+                        Acara <span id="currentTrackSheetBadge" class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-black">101</span> - Akhir Balapan
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 px-3 py-2 rounded-xl border border-blue-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 dark:bg-blue-950/40 dark:text-blue-300 px-4 py-2.5 rounded-2xl border border-blue-200/60 dark:border-blue-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-mars text-blue-600"></i> Akhir Lelaki
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                             <table class="w-full text-xs text-left min-w-[340px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                        <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                        <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                        <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                        <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBalapanMale" class="divide-y divide-slate-100"></tbody>
@@ -545,19 +550,19 @@ function getColLetter(colIndex) {
                     </div>
 
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 px-3 py-2 rounded-xl border border-rose-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 dark:bg-rose-950/40 dark:text-rose-300 px-4 py-2.5 rounded-2xl border border-rose-200/60 dark:border-rose-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-venus text-rose-600"></i> Akhir Perempuan
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                             <table class="w-full text-xs text-left min-w-[340px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                        <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                        <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-20 sm:w-24">Masa</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                        <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                        <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-20 sm:w-24">Masa</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBalapanFemale" class="divide-y divide-slate-100"></tbody>
@@ -568,33 +573,33 @@ function getColLetter(colIndex) {
             </div>
         </div>
 
-        <div id="mainTabContent-relay" class="space-y-5 sm:space-y-6 hidden">
-            <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Relay:</span>
-                <div id="relayEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
+        <div id="mainTabContent-relay" class="space-y-6 hidden">
+            <div class="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Pilih Acara Relay:</span>
+                <div id="relayEventSelector" class="flex flex-wrap gap-2 touch-pan-x"></div>
             </div>
 
-            <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2">
+            <div class="bg-white rounded-3xl p-4 sm:p-7 shadow-glass border border-slate-200/80 space-y-6">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2.5">
                         <i class="fa-solid fa-person-running text-indigo-600"></i>
-                        Acara <span id="currentRelaySheetBadge" class="bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-lg text-xs sm:text-sm font-black">411</span> - Relay
+                        Acara <span id="currentRelaySheetBadge" class="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-black">411</span> - Relay
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 px-3 py-2 rounded-xl border border-blue-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 dark:bg-blue-950/40 dark:text-blue-300 px-4 py-2.5 rounded-2xl border border-blue-200/60 dark:border-blue-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-mars text-blue-600"></i> Relay Lelaki (A5:F8)
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                             <table class="w-full text-xs text-left min-w-[320px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                        <th class="p-2 sm:p-2.5">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-24 sm:w-28">Masa</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-16 sm:w-20">Kedudukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                        <th class="p-2.5 sm:p-3">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-24 sm:w-28">Masa</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-16 sm:w-20">Kedudukan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableRelayMale" class="divide-y divide-slate-100"></tbody>
@@ -603,17 +608,17 @@ function getColLetter(colIndex) {
                     </div>
 
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 px-3 py-2 rounded-xl border border-rose-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 dark:bg-rose-950/40 dark:text-rose-300 px-4 py-2.5 rounded-2xl border border-rose-200/60 dark:border-rose-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-venus text-rose-600"></i> Relay Perempuan (I5:N8)
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
                             <table class="w-full text-xs text-left min-w-[320px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Lrg</th>
-                                        <th class="p-2 sm:p-2.5">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-24 sm:w-28">Masa</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-16 sm:w-20">Kedudukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Lrg</th>
+                                        <th class="p-2.5 sm:p-3">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-24 sm:w-28">Masa</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-16 sm:w-20">Kedudukan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableRelayFemale" class="divide-y divide-slate-100"></tbody>
@@ -624,41 +629,41 @@ function getColLetter(colIndex) {
             </div>
         </div>
 
-        <div id="mainTabContent-padang_acara" class="space-y-5 sm:space-y-6 hidden">
-            <div class="flex items-center justify-between flex-wrap gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl shadow-xs border border-slate-200">
-                <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Pilih Acara Padang:</span>
-                <div id="padangAcaraEventSelector" class="flex flex-wrap gap-1.5 touch-pan-x"></div>
+        <div id="mainTabContent-padang_acara" class="space-y-6 hidden">
+            <div class="flex items-center justify-between flex-wrap gap-3 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Pilih Acara Padang:</span>
+                <div id="padangAcaraEventSelector" class="flex flex-wrap gap-2 touch-pan-x"></div>
             </div>
 
-            <div class="bg-white rounded-2xl p-3.5 sm:p-6 shadow-xs border border-slate-200 space-y-5 sm:space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2">
+            <div class="bg-white rounded-3xl p-4 sm:p-7 shadow-glass border border-slate-200/80 space-y-6">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                    <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2.5">
                         <i class="fa-solid fa-arrows-left-right-to-line text-amber-600"></i>
-                        Acara <span id="currentPadangAcaraSheetBadge" class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-lg text-xs sm:text-sm font-black">LOMPAT JAUH</span>
+                        Acara <span id="currentPadangAcaraSheetBadge" class="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-black">LongJump</span>
                     </h2>
                 </div>
 
-                <div class="space-y-5 sm:space-y-6">
+                <div class="space-y-6">
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 px-3 py-2 rounded-xl border border-blue-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-blue-900 bg-blue-50/80 dark:bg-blue-950/40 dark:text-blue-300 px-4 py-2.5 rounded-2xl border border-blue-200/60 dark:border-blue-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-mars text-blue-600"></i> Kategori Lelaki (A9:M16)
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
-                            <table class="w-full text-xs text-left min-w-[600px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
+                            <table class="w-full text-xs text-left min-w-[620px]">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Glrn</th>
-                                        <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                        <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P1</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P2</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P3</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P4</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P5</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P6</th>
-                                        <th class="p-2 sm:p-2.5 text-center font-bold bg-amber-50/50 w-20 sm:w-24">Terbaik</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Glrn</th>
+                                        <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                        <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P1</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P2</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P3</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P4</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P5</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P6</th>
+                                        <th class="p-2.5 sm:p-3 text-center font-bold bg-amber-50/60 dark:bg-amber-950/30 w-20 sm:w-24">Terbaik</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablePadangAcaraMale" class="divide-y divide-slate-100"></tbody>
@@ -667,25 +672,25 @@ function getColLetter(colIndex) {
                     </div>
 
                     <div>
-                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 px-3 py-2 rounded-xl border border-rose-200/60 flex items-center gap-2 mb-3">
+                        <h3 class="font-bold text-xs sm:text-sm text-rose-900 bg-rose-50/80 dark:bg-rose-950/40 dark:text-rose-300 px-4 py-2.5 rounded-2xl border border-rose-200/60 dark:border-rose-900/60 flex items-center gap-2 mb-3.5">
                             <i class="fa-solid fa-venus text-rose-600"></i> Kategori Perempuan (A26:M33)
                         </h3>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
-                            <table class="w-full text-xs text-left min-w-[600px]">
-                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200/80 shadow-xs">
+                            <table class="w-full text-xs text-left min-w-[620px]">
+                                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
                                     <tr>
-                                        <th class="p-2 sm:p-2.5 text-center w-8 sm:w-10">Glrn</th>
-                                        <th class="p-2 sm:p-2.5">Nama Atlet</th>
-                                        <th class="p-2 sm:p-2.5 text-center">Pasukan</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-10 sm:w-12">Bib</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P1</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P2</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P3</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P4</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P5</th>
-                                        <th class="p-2 sm:p-2.5 text-center">P6</th>
-                                        <th class="p-2 sm:p-2.5 text-center font-bold bg-amber-50/50 w-20 sm:w-24">Terbaik</th>
-                                        <th class="p-2 sm:p-2.5 text-center w-14 sm:w-16">Rank</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-8 sm:w-10">Glrn</th>
+                                        <th class="p-2.5 sm:p-3">Nama Atlet</th>
+                                        <th class="p-2.5 sm:p-3 text-center">Pasukan</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-10 sm:w-12">Bib</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P1</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P2</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P3</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P4</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P5</th>
+                                        <th class="p-2.5 sm:p-3 text-center">P6</th>
+                                        <th class="p-2.5 sm:p-3 text-center font-bold bg-amber-50/60 dark:bg-amber-950/30 w-20 sm:w-24">Terbaik</th>
+                                        <th class="p-2.5 sm:p-3 text-center w-14 sm:w-16">Rank</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tablePadangAcaraFemale" class="divide-y divide-slate-100"></tbody>
@@ -696,190 +701,182 @@ function getColLetter(colIndex) {
             </div>
         </div>
 
-        <div id="mainTabContent-rumusan" class="space-y-5 sm:space-y-6 hidden">
-            <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-xs border border-slate-200">
-                <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2 mb-4">
+        <div id="mainTabContent-pingat" class="space-y-6 hidden">
+            <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-glass border border-slate-200/80">
+                <h2 class="font-extrabold text-sm sm:text-lg text-slate-800 flex items-center gap-2.5 mb-5">
                     <i class="fa-solid fa-chart-line text-emerald-600"></i>
-                    Kedudukan & Pungutan Pingat Rumah Sukan (Eksklusif Akhir Balapan, Relay & Padang)
+                    Kedudukan & Pungutan Pingat Pasukan
                 </h2>
-                <div id="houseStatsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"></div>
+                <div id="houseStatsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer Copyright -->
-    <footer class="mt-auto py-4 text-center text-xs text-slate-500 border-t border-slate-200">
-        <p class="font-semibold">Hak Cipta Terpelihara @ 2026 eL_mioZ Cartel</p>
+    <footer class="mt-auto py-5 text-center text-xs text-slate-500 border-t border-slate-200/80 dark:border-slate-800 bg-white/40 dark:bg-slate-900/40 backdrop-blur-sm">
+        <p class="font-bold tracking-wide">Hak Cipta Terpelihara @ 2026 eL_mioZ</p>
     </footer>
 
-    <div id="loginOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-8 shadow-2xl border border-slate-100 relative my-auto">
-            <div class="text-center mb-5 sm:mb-6">
-                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    <i class="fa-solid fa-shield-halved text-xl sm:text-2xl"></i>
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 dark:border-slate-800 relative my-auto">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-3.5 shadow-glow-blue">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
                 </div>
-                <h2 class="font-extrabold text-lg sm:text-xl text-slate-900">Akses Sistem Kejohanan</h2>
-                <p class="text-xs text-slate-500 mt-1">Sila masukkan ID dan Kata Laluan untuk meneruskan</p>
+                <h2 class="font-black text-lg sm:text-xl text-slate-900 dark:text-white">Akses Sistem Kejohanan</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sila masukkan ID dan Kata Laluan untuk meneruskan</p>
             </div>
 
-            <form onsubmit="handleLoginSubmit(event)" class="space-y-3.5 sm:space-y-4">
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ID Pengguna</label>
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">ID Pengguna</label>
                     <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3.5 top-3 text-slate-400 text-xs sm:text-sm"></i>
-                        <input type="text" id="loginUserId" placeholder="Contoh: 0000" required class="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                        <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-400 text-xs sm:text-sm"></i>
+                        <input type="text" id="loginUserId" placeholder="Contoh: 0000" required class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kata Laluan</label>
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">Kata Laluan</label>
                     <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-400 text-xs sm:text-sm"></i>
-                        <input type="password" id="loginPassword" placeholder="••••" required class="w-full pl-9 pr-3.5 py-2 sm:py-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-xs sm:text-sm"></i>
+                        <input type="password" id="loginPassword" placeholder="••••" required class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-300 dark:border-slate-700 text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                     </div>
                 </div>
 
-                <div id="loginErrorMsg" class="hidden p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-semibold border border-rose-200 flex items-center gap-2">
+                <div id="loginErrorMsg" class="hidden p-3.5 rounded-2xl bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300 text-xs font-semibold border border-rose-200 dark:border-rose-900/60 flex items-center gap-2.5">
                     <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
                     <span id="loginErrorText">ID atau Kata Laluan tidak sah.</span>
                 </div>
 
-                <button type="submit" class="w-full py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition active:scale-95 shadow-md">
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all active:scale-95 shadow-md hover:shadow-glow-blue">
                     Log Masuk
                 </button>
             </form>
         </div>
     </div>
 
-    <div id="setupModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-5xl w-full p-4 sm:p-6 shadow-2xl border border-slate-200 my-auto max-h-[92vh] overflow-y-auto">
-            <div class="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 mb-4">
-                <div class="flex items-center gap-2.5 sm:gap-3">
-                    <div class="p-2 sm:p-2.5 bg-blue-50 text-blue-600 rounded-xl shrink-0">
+    <div id="setupModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-40 hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full p-5 sm:p-7 shadow-2xl border border-slate-200/80 dark:border-slate-800 my-auto max-h-[92vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200/80 dark:border-slate-800 mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 text-blue-600 rounded-2xl shrink-0 border border-blue-500/20">
                         <i class="fa-solid fa-user-shield text-lg sm:text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="font-extrabold text-sm sm:text-lg text-slate-800">Tetapan Admin Utama</h2>
+                        <h2 class="font-black text-sm sm:text-lg text-slate-800 dark:text-white">Tetapan Admin Utama</h2>
                         <p class="text-[11px] sm:text-xs text-slate-500">Pengurusan data API, akaun pegawai & log aktiviti</p>
                     </div>
                 </div>
-                <button onclick="toggleSetupModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-xl active:scale-95">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button onclick="toggleSetupModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl active:scale-95 transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
 
-            <!-- 3 Admin Sub-tabs -->
-            <div class="flex border-b border-slate-200 mb-5 gap-1.5 sm:gap-2 overflow-x-auto touch-pan-x">
-                <button id="adminSubTabBtn-urlConfig" onclick="switchAdminSubTab('urlConfig')" class="py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-900 border-t-2 border-blue-600 shadow-xs">
+            <div class="flex border-b border-slate-200/80 dark:border-slate-800 mb-6 gap-2 overflow-x-auto touch-pan-x">
+                <button id="adminSubTabBtn-urlConfig" onclick="switchAdminSubTab('urlConfig')" class="py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-900 border-t-2 border-blue-600 shadow-xs">
                     <i class="fa-solid fa-link"></i> Pengurusan Data (URL API)
                 </button>
-                <button id="adminSubTabBtn-users" onclick="switchAdminSubTab('users')" class="py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200">
+                <button id="adminSubTabBtn-users" onclick="switchAdminSubTab('users')" class="py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200">
                     <i class="fa-solid fa-users-gear"></i> Pengurusan Pengguna
                 </button>
-                <button id="adminSubTabBtn-logs" onclick="switchAdminSubTab('logs')" class="py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200">
+                <button id="adminSubTabBtn-logs" onclick="switchAdminSubTab('logs')" class="py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200">
                     <i class="fa-solid fa-clock-rotate-left"></i> Sejarah & Log Aktiviti
                 </button>
             </div>
 
-            <!-- Sub-tab 1: Pengurusan Data URL -->
-            <div id="adminTabContent-urlConfig" class="space-y-4 sm:space-y-6">
-                <!-- Saringan Config -->
-                <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-2.5 sm:space-y-3">
+            <div id="adminTabContent-urlConfig" class="space-y-5">
+                <div class="bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-xs text-slate-700 flex items-center gap-2">
+                        <span class="font-bold text-xs text-slate-700 dark:text-slate-200 flex items-center gap-2">
                             <i class="fa-solid fa-database text-blue-600"></i> Web App URL - Acara Saringan
                         </span>
-                        <span id="badgePadangStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
+                        <span id="badgePadangStatus" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
                     </div>
-                    <input type="url" id="webAppUrlPadangInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
-                    <div class="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-                        <button onclick="testApiUrl('padang')" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition active:scale-95">Uji</button>
-                        <button onclick="saveApiUrl('padang')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition active:scale-95">Simpan</button>
-                        <button onclick="editApiUrl('padang')" class="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition active:scale-95">Edit</button>
-                        <button onclick="deleteApiUrl('padang')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition active:scale-95">Hapus</button>
-                        <button onclick="copyGasCode('padang')" class="ml-auto px-2.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
+                    <input type="url" id="webAppUrlPadangInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="testApiUrl('padang')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all active:scale-95">Uji</button>
+                        <button onclick="saveApiUrl('padang')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-xs">Simpan</button>
+                        <button onclick="editApiUrl('padang')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-all active:scale-95">Edit</button>
+                        <button onclick="deleteApiUrl('padang')" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-xl transition-all active:scale-95">Hapus</button>
+                        <button onclick="copyGasCode('padang')" class="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
                     </div>
                     <div id="testUrlResultPadang" class="hidden"></div>
                 </div>
 
-                <!-- Akhir Balapan Config -->
-                <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-2.5 sm:space-y-3">
+                <div class="bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-xs text-slate-700 flex items-center gap-2">
+                        <span class="font-bold text-xs text-slate-700 dark:text-slate-200 flex items-center gap-2">
                             <i class="fa-solid fa-flag-checkered text-emerald-600"></i> Web App URL - Akhir Balapan
                         </span>
-                        <span id="badgeBalapanStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
+                        <span id="badgeBalapanStatus" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
                     </div>
-                    <input type="url" id="webAppUrlBalapanInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
-                    <div class="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-                        <button onclick="testApiUrl('balapan')" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition active:scale-95">Uji</button>
-                        <button onclick="saveApiUrl('balapan')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition active:scale-95">Simpan</button>
-                        <button onclick="editApiUrl('balapan')" class="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition active:scale-95">Edit</button>
-                        <button onclick="deleteApiUrl('balapan')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition active:scale-95">Hapus</button>
-                        <button onclick="copyGasCode('balapan')" class="ml-auto px-2.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
+                    <input type="url" id="webAppUrlBalapanInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="testApiUrl('balapan')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all active:scale-95">Uji</button>
+                        <button onclick="saveApiUrl('balapan')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-xs">Simpan</button>
+                        <button onclick="editApiUrl('balapan')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-all active:scale-95">Edit</button>
+                        <button onclick="deleteApiUrl('balapan')" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-xl transition-all active:scale-95">Hapus</button>
+                        <button onclick="copyGasCode('balapan')" class="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
                     </div>
                     <div id="testUrlResultBalapan" class="hidden"></div>
                 </div>
 
-                <!-- Relay Config -->
-                <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-2.5 sm:space-y-3">
+                <div class="bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-xs text-slate-700 flex items-center gap-2">
+                        <span class="font-bold text-xs text-slate-700 dark:text-slate-200 flex items-center gap-2">
                             <i class="fa-solid fa-person-running text-indigo-600"></i> Web App URL - Acara Relay
                         </span>
-                        <span id="badgeRelayStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
+                        <span id="badgeRelayStatus" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
                     </div>
-                    <input type="url" id="webAppUrlRelayInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
-                    <div class="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-                        <button onclick="testApiUrl('relay')" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition active:scale-95">Uji</button>
-                        <button onclick="saveApiUrl('relay')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition active:scale-95">Simpan</button>
-                        <button onclick="editApiUrl('relay')" class="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition active:scale-95">Edit</button>
-                        <button onclick="deleteApiUrl('relay')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition active:scale-95">Hapus</button>
-                        <button onclick="copyGasCode('relay')" class="ml-auto px-2.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
+                    <input type="url" id="webAppUrlRelayInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="testApiUrl('relay')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all active:scale-95">Uji</button>
+                        <button onclick="saveApiUrl('relay')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-xs">Simpan</button>
+                        <button onclick="editApiUrl('relay')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-all active:scale-95">Edit</button>
+                        <button onclick="deleteApiUrl('relay')" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-xl transition-all active:scale-95">Hapus</button>
+                        <button onclick="copyGasCode('relay')" class="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
                     </div>
                     <div id="testUrlResultRelay" class="hidden"></div>
                 </div>
 
-                <!-- Padang Acara Config -->
-                <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-2.5 sm:space-y-3">
+                <div class="bg-slate-50/80 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-xs text-slate-700 flex items-center gap-2">
+                        <span class="font-bold text-xs text-slate-700 dark:text-slate-200 flex items-center gap-2">
                             <i class="fa-solid fa-arrows-left-right-to-line text-amber-600"></i> Web App URL - Acara Padang
                         </span>
-                        <span id="badgePadangAcaraStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
+                        <span id="badgePadangAcaraStatus" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Belum Disimpan</span>
                     </div>
-                    <input type="url" id="webAppUrlPadangAcaraInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
-                    <div class="flex flex-wrap gap-1.5 sm:gap-2 pt-1">
-                        <button onclick="testApiUrl('padang_acara')" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition active:scale-95">Uji</button>
-                        <button onclick="saveApiUrl('padang_acara')" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition active:scale-95">Simpan</button>
-                        <button onclick="editApiUrl('padang_acara')" class="px-2.5 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-lg transition active:scale-95">Edit</button>
-                        <button onclick="deleteApiUrl('padang_acara')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-lg transition active:scale-95">Hapus</button>
-                        <button onclick="copyGasCode('padang_acara')" class="ml-auto px-2.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
+                    <input type="url" id="webAppUrlPadangAcaraInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="testApiUrl('padang_acara')" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all active:scale-95">Uji</button>
+                        <button onclick="saveApiUrl('padang_acara')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all active:scale-95 shadow-xs">Simpan</button>
+                        <button onclick="editApiUrl('padang_acara')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-all active:scale-95">Edit</button>
+                        <button onclick="deleteApiUrl('padang_acara')" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold rounded-xl transition-all active:scale-95">Hapus</button>
+                        <button onclick="copyGasCode('padang_acara')" class="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-all active:scale-95"><i class="fa-regular fa-copy"></i> Salin Kod GAS</button>
                     </div>
                     <div id="testUrlResultPadangAcara" class="hidden"></div>
                 </div>
             </div>
 
-            <!-- Sub-tab 2: Pengurusan Pengguna -->
             <div id="adminTabContent-users" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-bold text-xs sm:text-sm text-slate-800">Senarai Pengguna Dibenarkan</h3>
-                    <button onclick="openAddUserModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition active:scale-95 flex items-center gap-1.5">
+                    <h3 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200">Senarai Pengguna Dibenarkan</h3>
+                    <button onclick="openAddUserModal()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all active:scale-95 flex items-center gap-2 shadow-xs">
                         <i class="fa-solid fa-user-plus"></i> Tambah Pengguna
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <div class="overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-800">
                     <table class="w-full text-xs text-left min-w-[500px]">
-                        <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 font-bold border-b border-slate-200/80">
                             <tr>
-                                <th class="p-2.5 sm:p-3">Nama Pengguna</th>
-                                <th class="p-2.5 sm:p-3 text-center">ID Pengguna</th>
-                                <th class="p-2.5 sm:p-3 text-center">Kata Laluan</th>
-                                <th class="p-2.5 sm:p-3 text-center">Peranan</th>
-                                <th class="p-2.5 sm:p-3 text-center">Status</th>
-                                <th class="p-2.5 sm:p-3 text-center">Tindakan</th>
+                                <th class="p-3">Nama Pengguna</th>
+                                <th class="p-3 text-center">ID Pengguna</th>
+                                <th class="p-3 text-center">Kata Laluan</th>
+                                <th class="p-3 text-center">Peranan</th>
+                                <th class="p-3 text-center">Status</th>
+                                <th class="p-3 text-center">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody id="usersTableBody" class="divide-y divide-slate-100"></tbody>
@@ -887,25 +884,24 @@ function getColLetter(colIndex) {
                 </div>
             </div>
 
-            <!-- Sub-tab 3: Sejarah & Log Aktiviti -->
             <div id="adminTabContent-logs" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-bold text-xs sm:text-sm text-slate-800">Sejarah & Rekod Log Aktiviti</h3>
-                    <button onclick="clearActivityLogs()" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold rounded-xl transition active:scale-95 flex items-center gap-1">
+                    <h3 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200">Sejarah & Rekod Log Aktiviti</h3>
+                    <button onclick="clearActivityLogs()" class="px-3.5 py-2 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold rounded-xl transition-all active:scale-95 flex items-center gap-1.5">
                         <i class="fa-solid fa-trash-can"></i> Kosongkan Log
                     </button>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-slate-200 max-h-80">
+                <div class="overflow-x-auto rounded-2xl border border-slate-200/80 dark:border-slate-800 max-h-80">
                     <table class="w-full text-xs text-left min-w-[680px]">
-                        <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                        <thead class="bg-slate-100 dark:bg-slate-900 text-slate-700 font-bold border-b border-slate-200/80 sticky top-0">
                             <tr>
-                                <th class="p-2.5 sm:p-3 w-32 sm:w-36">Masa & Tarikh</th>
-                                <th class="p-2.5 sm:p-3">Pengguna</th>
-                                <th class="p-2.5 sm:p-3">Kategori</th>
-                                <th class="p-2.5 sm:p-3">Butiran Aktiviti</th>
-                                <th class="p-2.5 sm:p-3 text-center">Status</th>
-                                <th class="p-2.5 sm:p-3">IP, Peranti & Sistem</th>
+                                <th class="p-3 w-36">Masa & Tarikh</th>
+                                <th class="p-3">Pengguna</th>
+                                <th class="p-3">Kategori</th>
+                                <th class="p-3">Butiran Aktiviti</th>
+                                <th class="p-3 text-center">Status</th>
+                                <th class="p-3">IP, Peranti & Sistem</th>
                             </tr>
                         </thead>
                         <tbody id="logsTableBody" class="divide-y divide-slate-100"></tbody>
@@ -916,50 +912,48 @@ function getColLetter(colIndex) {
         </div>
     </div>
 
-    <div id="userEditModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200 my-auto">
-            <h3 id="userFormTitle" class="font-extrabold text-sm sm:text-base text-slate-900 mb-4">Kemaskini Pengguna</h3>
-            <form onsubmit="saveUserForm(event)" class="space-y-3">
+    <div id="userEditModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200/80 dark:border-slate-800 my-auto">
+            <h3 id="userFormTitle" class="font-black text-sm sm:text-base text-slate-900 dark:text-white mb-4">Kemaskini Pengguna</h3>
+            <form onsubmit="saveUserForm(event)" class="space-y-3.5">
                 <input type="hidden" id="userFormIndex" value="-1">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Nama Pengguna</label>
-                    <input type="text" id="userFormName" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1">Nama Pengguna</label>
+                    <input type="text" id="userFormName" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">ID Pengguna</label>
-                    <input type="text" id="userFormId" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1">ID Pengguna</label>
+                    <input type="text" id="userFormId" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Kata Laluan</label>
-                    <input type="text" id="userFormPass" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1">Kata Laluan</label>
+                    <input type="text" id="userFormPass" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Peranan</label>
-                    <select id="userFormRole" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1">Peranan</label>
+                    <select id="userFormRole" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                         <option value="pegawai">Pegawai</option>
                         <option value="admin">Admin Utama</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-700 uppercase mb-1">Status Akaun</label>
-                    <select id="userFormStatus" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
+                    <label class="block text-[11px] font-extrabold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1">Status Akaun</label>
+                    <select id="userFormStatus" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-medium focus:ring-2 focus:ring-blue-500 focus:outline-hidden">
                         <option value="Aktif">Aktif</option>
                         <option value="Nyahaktif">Nyahaktif</option>
                     </select>
                 </div>
-                <div class="flex gap-2 pt-3">
-                    <button type="button" onclick="closeUserEditModal()" class="w-1/2 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition active:scale-95">Batal</button>
-                    <button type="submit" class="w-1/2 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition active:scale-95 shadow-md">Simpan</button>
+                <div class="flex gap-2.5 pt-4">
+                    <button type="button" onclick="closeUserEditModal()" class="w-1/2 py-2.5 bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition-all active:scale-95">Batal</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all active:scale-95 shadow-md">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
-    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-3"></div>
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-sm w-full pointer-events-none px-3"></div>
 
     <script>
-        // DEFAULT AUTHORIZED USERS
         const DEFAULT_USERS = [
             { id: "0000", name: "Admin Utama", pass: "0000", role: "admin", status: "Aktif" },
             { id: "01", name: "Pegawai 1", pass: "0000", role: "pegawai", status: "Aktif" },
@@ -982,17 +976,15 @@ function getColLetter(colIndex) {
         let currentSaringanEvent = '101'; 
         let currentBalapanEvent = '101';  
         let currentRelayEvent = '411';     
-        let currentPadangAcaraEvent = 'LOMPAT JAUH';
+        let currentPadangAcaraEvent = 'LongJump';
 
         const SARINGAN_SHEETS = ['101', '102', '103', '104', '105', '106', '204', '205', '206'];
         const AKHIR_SHEETS = ['101', '102', '103', '104', '105', '106', '204', '205', '206'];
         const RELAY_SHEETS = ['411', '414', '415', '424', '425'];
-        const PADANG_ACARA_SHEETS = ['LOMPAT JAUH', 'LOMPAT TINGGI', 'LONTAR PELURU'];
+        const PADANG_ACARA_SHEETS = ['LongJump', 'HighJump', 'ShotPut'];
 
-        // Mock Local Dataset
         let dataset = {};
 
-        // Helper function for Client Device & System information
         function getDeviceInfo() {
             const ua = navigator.userAgent;
             let os = "Desktop";
@@ -1011,7 +1003,6 @@ function getColLetter(colIndex) {
             return `${clientIpAddress} • ${os} (${browser})`;
         }
 
-        // Fetch client IP in background
         function detectClientIp() {
             fetch('https://api.ipify.org?format=json')
                 .then(res => res.json())
@@ -1019,7 +1010,25 @@ function getColLetter(colIndex) {
                 .catch(() => { clientIpAddress = "127.0.0.1"; });
         }
 
-        // --- Dark Mode / Light Mode Logic ---
+        function normalizeHouseName(name) {
+            if (!name) return '';
+            const n = name.toString().toLowerCase();
+            if (n.includes('garuda') || n.includes('merah')) return 'Garuda';
+            if (n.includes('rajawali') || n.includes('biru')) return 'Rajawali';
+            if (n.includes('helang') || n.includes('hijau')) return 'Helang';
+            if (n.includes('kenyalang') || n.includes('kuning')) return 'Kenyalang';
+            return name;
+        }
+
+        function getHouseTextColor(house) {
+            const norm = normalizeHouseName(house);
+            if (norm === 'Garuda') return 'text-red-600 dark:text-red-400 font-extrabold';
+            if (norm === 'Rajawali') return 'text-blue-600 dark:text-blue-400 font-extrabold';
+            if (norm === 'Helang') return 'text-emerald-600 dark:text-emerald-400 font-extrabold';
+            if (norm === 'Kenyalang') return 'text-amber-500 dark:text-yellow-400 font-extrabold';
+            return 'text-slate-700 dark:text-slate-300';
+        }
+
         function toggleDarkMode() {
             const isDark = document.body.classList.toggle('dark');
             localStorage.setItem('sports_theme', isDark ? 'dark' : 'light');
@@ -1067,6 +1076,8 @@ function getColLetter(colIndex) {
             renderEventSelectors();
             renderAllTables();
             updateStats();
+
+            fetchDataFromBackend();
         };
 
         function checkUserAuth() {
@@ -1159,39 +1170,39 @@ function getColLetter(colIndex) {
             [urlTab, usersTab, logsTab].forEach(t => t?.classList.add('hidden'));
 
             [btnUrl, btnUsers, btnLogs].forEach(b => {
-                if (b) b.className = "py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200";
+                if (b) b.className = "py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-200/70 text-slate-600 hover:bg-slate-200";
             });
 
             if (tabName === 'urlConfig') {
                 urlTab?.classList.remove('hidden');
-                if (btnUrl) btnUrl.className = "py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-900 border-t-2 border-blue-600 shadow-xs";
+                if (btnUrl) btnUrl.className = "py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-900 border-t-2 border-blue-600 shadow-xs";
             } else if (tabName === 'users') {
                 usersTab?.classList.remove('hidden');
-                if (btnUsers) btnUsers.className = "py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-900 border-t-2 border-emerald-600 shadow-xs";
+                if (btnUsers) btnUsers.className = "py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-900 border-t-2 border-emerald-600 shadow-xs";
                 renderUsersTable();
             } else if (tabName === 'logs') {
                 logsTab?.classList.remove('hidden');
-                if (btnLogs) btnLogs.className = "py-2 sm:py-2.5 px-3 sm:px-4 rounded-t-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-900 border-t-2 border-amber-600 shadow-xs";
+                if (btnLogs) btnLogs.className = "py-2.5 px-4 rounded-t-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-900 border-t-2 border-amber-600 shadow-xs";
                 renderLogsTable();
             }
         }
 
         function switchMainTab(tab) {
             currentMainTab = tab;
-            const tabs = ['padang', 'balapan', 'relay', 'padang_acara', 'rumusan'];
+            const tabs = ['padang', 'balapan', 'relay', 'padang_acara', 'pingat'];
             tabs.forEach(t => {
                 const el = document.getElementById(`mainTabContent-${t}`);
                 const btn = document.getElementById(`tabBtn-${t}`);
                 if (el) el.classList.add('hidden');
-                if (btn) btn.className = "py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200 active:scale-95";
+                if (btn) btn.className = "py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200/60 active:scale-95";
             });
 
             const activeEl = document.getElementById(`mainTabContent-${tab}`);
             const activeBtn = document.getElementById(`tabBtn-${tab}`);
             if (activeEl) activeEl.classList.remove('hidden');
-            if (activeBtn) activeBtn.className = "py-2.5 px-3.5 sm:px-4 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition flex items-center gap-2 bg-blue-600 text-white shadow-sm active:scale-95";
+            if (activeBtn) activeBtn.className = "py-2.5 px-4 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 active:scale-95";
 
-            if (tab === 'rumusan') renderHouseStats();
+            if (tab === 'pingat') renderHouseStats();
         }
 
         function renderUsersTable() {
@@ -1202,21 +1213,21 @@ function getColLetter(colIndex) {
             usersList.forEach((u, index) => {
                 const isAdmin = u.role === 'admin';
                 html += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-2.5 px-3 sm:p-3 font-bold text-slate-800">${u.name}</td>
-                        <td class="py-2.5 px-3 sm:p-3 text-center font-mono font-bold text-slate-600">${u.id}</td>
-                        <td class="py-2.5 px-3 sm:p-3 text-center font-mono text-slate-500">••••</td>
-                        <td class="py-2.5 px-3 sm:p-3 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isAdmin ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-blue-100 text-blue-800 border border-blue-200'}">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-3 px-3.5 font-bold text-slate-800 dark:text-slate-100">${u.name}</td>
+                        <td class="py-3 px-3.5 text-center font-mono font-bold text-slate-600 dark:text-slate-400">${u.id}</td>
+                        <td class="py-3 px-3.5 text-center font-mono text-slate-400">••••</td>
+                        <td class="py-3 px-3.5 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${isAdmin ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-blue-100 text-blue-800 border border-blue-200'}">
                                 ${isAdmin ? 'Admin Utama' : 'Pegawai'}
                             </span>
                         </td>
-                        <td class="py-2.5 px-3 sm:p-3 text-center">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${u.status === 'Aktif' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
+                        <td class="py-3 px-3.5 text-center">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${u.status === 'Aktif' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">
                                 ${u.status}
                             </span>
                         </td>
-                        <td class="py-2.5 px-3 sm:p-3 text-center">
+                        <td class="py-3 px-3.5 text-center">
                             <div class="flex items-center justify-center gap-1.5">
                                 <button onclick="openEditUserModal(${index})" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs active:scale-95" title="Edit">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1329,17 +1340,17 @@ function getColLetter(colIndex) {
             activityLogs.forEach(l => {
                 const logStatus = l.status || "Berjaya";
                 const isSuccess = logStatus === "Berjaya" || logStatus.includes("OK") || logStatus.toLowerCase().includes("berjaya");
-                const statusBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isSuccess ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${logStatus}</span>`;
+                const statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${isSuccess ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${logStatus}</span>`;
                 const deviceText = l.deviceInfo || getDeviceInfo();
 
                 html += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-2.5 px-3 sm:px-4 font-mono text-slate-500 text-[11px]">${l.timestamp}</td>
-                        <td class="py-2.5 px-3 font-bold text-slate-800">${l.userName} (${l.userId})</td>
-                        <td class="py-2.5 px-3 font-semibold text-blue-600">${l.kategori}</td>
-                        <td class="py-2.5 px-3 sm:px-4 text-slate-700">${l.butiran}</td>
-                        <td class="py-2.5 px-3 text-center">${statusBadge}</td>
-                        <td class="py-2.5 px-3 sm:px-4 font-mono text-slate-600 text-[11px]">${deviceText}</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="py-3 px-3.5 font-mono text-slate-400 text-[11px]">${l.timestamp}</td>
+                        <td class="py-3 px-3.5 font-bold text-slate-800 dark:text-slate-100">${l.userName} (${l.userId})</td>
+                        <td class="py-3 px-3.5 font-semibold text-blue-600 dark:text-blue-400">${l.kategori}</td>
+                        <td class="py-3 px-3.5 text-slate-700 dark:text-slate-300">${l.butiran}</td>
+                        <td class="py-3 px-3.5 text-center">${statusBadge}</td>
+                        <td class="py-3 px-3.5 font-mono text-slate-500 dark:text-slate-400 text-[11px]">${deviceText}</td>
                     </tr>
                 `;
             });
@@ -1356,41 +1367,37 @@ function getColLetter(colIndex) {
         }
 
         function renderEventSelectors() {
-            // Saringan Selector
             const sarSel = document.getElementById('saringanEventSelector');
             if (sarSel) {
                 sarSel.innerHTML = SARINGAN_SHEETS.map(s => `
-                    <button onclick="changeSaringanEvent('${s}')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${currentSaringanEvent === s ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                    <button onclick="changeSaringanEvent('${s}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${currentSaringanEvent === s ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
                         ${s}
                     </button>
                 `).join('');
             }
 
-            // Balapan Selector
             const balSel = document.getElementById('balapanEventSelector');
             if (balSel) {
                 balSel.innerHTML = AKHIR_SHEETS.map(s => `
-                    <button onclick="changeBalapanEvent('${s}')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${currentBalapanEvent === s ? 'bg-emerald-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                    <button onclick="changeBalapanEvent('${s}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${currentBalapanEvent === s ? 'bg-emerald-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
                         ${s}
                     </button>
                 `).join('');
             }
 
-            // Relay Selector
             const relSel = document.getElementById('relayEventSelector');
             if (relSel) {
                 relSel.innerHTML = RELAY_SHEETS.map(s => `
-                    <button onclick="changeRelayEvent('${s}')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${currentRelayEvent === s ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                    <button onclick="changeRelayEvent('${s}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${currentRelayEvent === s ? 'bg-indigo-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
                         ${s}
                     </button>
                 `).join('');
             }
 
-            // Padang Acara Selector
             const padSel = document.getElementById('padangAcaraEventSelector');
             if (padSel) {
                 padSel.innerHTML = PADANG_ACARA_SHEETS.map(s => `
-                    <button onclick="changePadangAcaraEvent('${s}')" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${currentPadangAcaraEvent === s ? 'bg-amber-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
+                    <button onclick="changePadangAcaraEvent('${s}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 ${currentPadangAcaraEvent === s ? 'bg-amber-600 text-white shadow-xs' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">
                         ${s}
                     </button>
                 `).join('');
@@ -1405,7 +1412,6 @@ function getColLetter(colIndex) {
         function initializeMockDataset() {
             const houses = ['Garuda', 'Rajawali', 'Helang', 'Kenyalang'];
             
-            // Saringan & Balapan
             SARINGAN_SHEETS.forEach(s => {
                 const rowCount = ['204','205','206'].includes(s) ? 4 : 8;
                 dataset[s] = {
@@ -1418,7 +1424,6 @@ function getColLetter(colIndex) {
                 };
             });
 
-            // Relay
             RELAY_SHEETS.forEach(s => {
                 dataset[s] = {
                     male: Array.from({length: 4}, (_, i) => ({ lane: i+1, house: houses[i], time: '', rank: '' })),
@@ -1426,7 +1431,6 @@ function getColLetter(colIndex) {
                 };
             });
 
-            // Padang Acara
             PADANG_ACARA_SHEETS.forEach(s => {
                 dataset[s] = {
                     male: Array.from({length: 8}, (_, i) => ({ order: i+1, name: `Atlet Padang L-${i+1}`, house: houses[i%4], bib: `PL0${i}`, p1:'', p2:'', p3:'', p4:'', p5:'', p6:'', best:'', rank:'' })),
@@ -1436,7 +1440,6 @@ function getColLetter(colIndex) {
         }
 
         function renderAllTables() {
-            // Update badges
             const bS = document.getElementById('currentSaringanSheetBadge');
             const bB = document.getElementById('currentTrackSheetBadge');
             const bR = document.getElementById('currentRelaySheetBadge');
@@ -1485,16 +1488,16 @@ function getColLetter(colIndex) {
             tbody.innerHTML = rowData.map((row, idx) => {
                 const actualRow = baseRow + idx;
                 return `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-2 sm:p-2.5 text-center font-bold text-slate-600">${row.lane || idx+1}</td>
-                        <td class="p-2 sm:p-2.5 font-semibold text-slate-800">${row.name || '-'}</td>
-                        <td class="p-2 sm:p-2.5 text-center font-bold ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
-                        <td class="p-2 sm:p-2.5 text-center font-mono text-slate-500">${row.bib || '-'}</td>
-                        <td class="p-1.5 sm:p-2 text-center">
-                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('${type}', '${eventName}', '${category}', ${actualRow}, ${colRankIdx}, this.value)" class="w-10 sm:w-12 py-1 px-1 sm:px-1.5 text-center rounded-lg border border-slate-300 font-bold focus:ring-2 focus:ring-blue-500">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-2.5 sm:p-3 text-center font-bold text-slate-500">${row.lane || idx+1}</td>
+                        <td class="p-2.5 sm:p-3 font-semibold text-slate-800 dark:text-slate-100">${row.name || '-'}</td>
+                        <td class="p-2.5 sm:p-3 text-center ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
+                        <td class="p-2.5 sm:p-3 text-center font-mono text-slate-400">${row.bib || '-'}</td>
+                        <td class="p-2 text-center">
+                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('${type}', '${eventName}', '${category}', ${actualRow}, ${colRankIdx}, this.value)" class="w-10 sm:w-12 py-1 px-1.5 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-bold focus:ring-2 focus:ring-blue-500 transition-shadow">
                         </td>
-                        <td class="p-1.5 sm:p-2 text-center">
-                            <input type="text" value="${row.time || ''}" placeholder="00:00.00" onchange="handleSingleCellSave('${type}', '${eventName}', '${category}', ${actualRow}, ${colTimeIdx}, this.value)" class="w-18 sm:w-20 py-1 px-1 sm:px-1.5 text-center rounded-lg border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-blue-500">
+                        <td class="p-2 text-center">
+                            <input type="text" value="${row.time || ''}" placeholder="00:00.00" onchange="handleSingleCellSave('${type}', '${eventName}', '${category}', ${actualRow}, ${colTimeIdx}, this.value)" class="w-18 sm:w-22 py-1 px-1.5 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-blue-500 transition-shadow">
                         </td>
                     </tr>
                 `;
@@ -1510,14 +1513,14 @@ function getColLetter(colIndex) {
                 if (!tbody || !list) return;
 
                 tbody.innerHTML = list.map((row, idx) => `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-2 sm:p-2.5 text-center font-bold text-slate-600">${row.lane || idx+1}</td>
-                        <td class="p-2 sm:p-2.5 font-bold ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
-                        <td class="p-1.5 sm:p-2 text-center">
-                            <input type="text" value="${row.time || ''}" placeholder="00:00.00" onchange="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${baseRow + idx}, ${colTimeIdx}, this.value)" class="w-20 sm:w-24 py-1 px-1.5 text-center rounded-lg border border-slate-300 font-mono text-xs focus:ring-2 focus:ring-indigo-500">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-2.5 sm:p-3 text-center font-bold text-slate-500">${row.lane || idx+1}</td>
+                        <td class="p-2.5 sm:p-3 ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
+                        <td class="p-2 text-center">
+                            <input type="text" value="${row.time || ''}" placeholder="00:00.00" onchange="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${baseRow + idx}, ${colTimeIdx}, this.value)" class="w-20 sm:w-24 py-1 px-1.5 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-indigo-500 transition-shadow">
                         </td>
-                        <td class="p-1.5 sm:p-2 text-center">
-                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${baseRow + idx}, ${colRankIdx}, this.value)" class="w-12 sm:w-16 py-1 px-1.5 text-center rounded-lg border border-slate-300 font-bold focus:ring-2 focus:ring-indigo-500">
+                        <td class="p-2 text-center">
+                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('relay', '${currentRelayEvent}', '${category}', ${baseRow + idx}, ${colRankIdx}, this.value)" class="w-12 sm:w-16 py-1 px-1.5 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-bold focus:ring-2 focus:ring-indigo-500 transition-shadow">
                         </td>
                     </tr>
                 `).join('');
@@ -1536,22 +1539,34 @@ function getColLetter(colIndex) {
                 if (!tbody || !list) return;
 
                 tbody.innerHTML = list.map((row, idx) => `
-                    <tr class="hover:bg-slate-50 transition text-center">
-                        <td class="p-2 sm:p-2.5 font-bold text-slate-600">${row.order || idx+1}</td>
-                        <td class="p-2 sm:p-2.5 text-left font-semibold text-slate-800">${row.name || '-'}</td>
-                        <td class="p-2 sm:p-2.5 font-bold ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
-                        <td class="p-2 sm:p-2.5 font-mono text-slate-500">${row.bib || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p1 || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p2 || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p3 || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p4 || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p5 || '-'}</td>
-                        <td class="p-1 font-mono text-slate-600">${row.p6 || '-'}</td>
-                        <td class="p-1 bg-amber-50/50">
-                            <input type="text" value="${row.best || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 11, this.value)" class="w-16 sm:w-20 py-1 px-1 text-center rounded-lg border border-slate-300 font-bold focus:ring-2 focus:ring-amber-500">
+                    <tr class="hover:bg-slate-50 transition-colors text-center">
+                        <td class="p-2.5 sm:p-3 font-bold text-slate-500">${row.order || idx+1}</td>
+                        <td class="p-2.5 sm:p-3 text-left font-semibold text-slate-800 dark:text-slate-100">${row.name || '-'}</td>
+                        <td class="p-2.5 sm:p-3 ${getHouseTextColor(row.house)}">${row.house || '-'}</td>
+                        <td class="p-2.5 sm:p-3 font-mono text-slate-400">${row.bib || '-'}</td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p1 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 5, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
                         </td>
-                        <td class="p-1">
-                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 12, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 font-bold focus:ring-2 focus:ring-amber-500">
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p2 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 6, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p3 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 7, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p4 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 8, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p5 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 9, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.p6 || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 10, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-lg border border-slate-300 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5 bg-amber-50/60 dark:bg-amber-950/30">
+                            <input type="text" value="${row.best || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 11, this.value)" class="w-16 sm:w-20 py-1 px-1 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-bold focus:ring-2 focus:ring-amber-500">
+                        </td>
+                        <td class="p-1.5">
+                            <input type="text" value="${row.rank || ''}" onchange="handleSingleCellSave('padang_acara', '${currentPadangAcaraEvent}', '${category}', ${baseRow + idx}, 12, this.value)" class="w-10 sm:w-12 py-1 px-1 text-center rounded-xl border border-slate-300 dark:border-slate-700 font-bold focus:ring-2 focus:ring-amber-500">
                         </td>
                     </tr>
                 `).join('');
@@ -1608,12 +1623,117 @@ function getColLetter(colIndex) {
         }
 
         function updateLocalDatasetCell(eventName, category, rowIndex, colIndex, value) {
-            // Optimistic local updates
+            const ev = dataset[eventName];
+            if (!ev) return;
+
+            const updateListRow = (list, baseRow, rankIdx, timeIdx) => {
+                if (!list) return;
+                const idx = rowIndex - baseRow;
+                if (list[idx]) {
+                    if (colIndex === rankIdx) list[idx].rank = value;
+                    else if (colIndex === timeIdx) list[idx].time = value;
+                    else if (colIndex === 11) list[idx].best = value;
+                    else if (colIndex === 12) list[idx].rank = value;
+                }
+            };
+
+            if (category === 'maleS1') updateListRow(ev.maleS1, 5, 5, 6);
+            else if (category === 'maleS2') updateListRow(ev.maleS2, ['204','205','206'].includes(eventName) ? 14 : 18, 5, 6);
+            else if (category === 'femaleS1') updateListRow(ev.femaleS1, 5, 13, 14);
+            else if (category === 'femaleS2') updateListRow(ev.femaleS2, ['204','205','206'].includes(eventName) ? 14 : 18, 13, 14);
+            else if (category === 'male') {
+                if (ev.male && ev.male.length > 0) {
+                    if (PADANG_ACARA_SHEETS.includes(eventName)) {
+                        const idx = rowIndex - 9;
+                        if (ev.male[idx]) {
+                            if (colIndex === 5) ev.male[idx].p1 = value;
+                            else if (colIndex === 6) ev.male[idx].p2 = value;
+                            else if (colIndex === 7) ev.male[idx].p3 = value;
+                            else if (colIndex === 8) ev.male[idx].p4 = value;
+                            else if (colIndex === 9) ev.male[idx].p5 = value;
+                            else if (colIndex === 10) ev.male[idx].p6 = value;
+                            else if (colIndex === 11) ev.male[idx].best = value;
+                            else if (colIndex === 12) ev.male[idx].rank = value;
+                        }
+                    } else if (RELAY_SHEETS.includes(eventName)) updateListRow(ev.male, 5, 5, 3);
+                    else updateListRow(ev.male, 6, 5, 6);
+                }
+            } else if (category === 'female') {
+                if (ev.female && ev.female.length > 0) {
+                    if (PADANG_ACARA_SHEETS.includes(eventName)) {
+                        const idx = rowIndex - 26;
+                        if (ev.female[idx]) {
+                            if (colIndex === 5) ev.female[idx].p1 = value;
+                            else if (colIndex === 6) ev.female[idx].p2 = value;
+                            else if (colIndex === 7) ev.female[idx].p3 = value;
+                            else if (colIndex === 8) ev.female[idx].p4 = value;
+                            else if (colIndex === 9) ev.female[idx].p5 = value;
+                            else if (colIndex === 10) ev.female[idx].p6 = value;
+                            else if (colIndex === 11) ev.female[idx].best = value;
+                            else if (colIndex === 12) ev.female[idx].rank = value;
+                        }
+                    } else if (RELAY_SHEETS.includes(eventName)) updateListRow(ev.female, 5, 13, 11);
+                    else updateListRow(ev.female, ['204','205','206'].includes(eventName) ? 16 : 20, 5, 6);
+                }
+            }
         }
 
         async function fetchDataFromBackend(isManual = false) {
-            if (isManual) showToast("Membuka data terkini...", "info");
+            if (isManual) showToast("Membuka data terkini dari Google Sheets...", "info");
+
+            const fetchService = async (url, sheetList, type) => {
+                if (!url) return;
+                try {
+                    const res = await fetch(`${url}?t=${new Date().getTime()}`, { redirect: 'follow' });
+                    const json = JSON.parse(await res.text());
+                    if (json.status === 'success' && json.events) {
+                        Object.keys(json.events).forEach(sName => {
+                            if (!dataset[sName]) dataset[sName] = {};
+                            const rawData = json.events[sName];
+
+                            if (type === 'padang') {
+                                const parseSaringan = (arr) => (arr || []).map((r, i) => ({ lane: r[0]||i+1, name: r[1]||'', house: r[3]||r[2]||'', bib: r[4]||r[3]||'', rank: r[5]||'', time: r[6]||'' }));
+                                const parseSaringanFemale = (arr) => (arr || []).map((r, i) => ({ lane: r[0]||i+1, name: r[1]||'', house: r[3]||r[2]||'', bib: r[4]||r[3]||'', rank: r[5]||'', time: r[6]||'' }));
+                                
+                                dataset[sName].maleS1 = parseSaringan(rawData.maleS1);
+                                dataset[sName].maleS2 = parseSaringan(rawData.maleS2);
+                                dataset[sName].femaleS1 = parseSaringanFemale(rawData.femaleS1);
+                                dataset[sName].femaleS2 = parseSaringanFemale(rawData.femaleS2);
+                            } else if (type === 'balapan') {
+                                const parseTrack = (arr) => (arr || []).map((r, i) => ({ lane: r[0]||i+1, name: r[1]||'', house: r[3]||r[2]||'', bib: r[4]||r[3]||'', rank: r[5]||'', time: r[6]||'' }));
+                                dataset[sName].male = parseTrack(rawData.male);
+                                dataset[sName].female = parseTrack(rawData.female);
+                            } else if (type === 'relay') {
+                                const parseRelayMale = (arr) => (arr || []).map((r, i) => ({ lane: r[0]||i+1, house: r[1]||r[2]||'', time: r[3]||'', rank: r[5]||'' }));
+                                const parseRelayFemale = (arr) => (arr || []).map((r, i) => ({ lane: r[0]||i+1, house: r[1]||r[2]||'', time: r[3]||'', rank: r[5]||'' }));
+                                dataset[sName].male = parseRelayMale(rawData.male);
+                                dataset[sName].female = parseRelayFemale(rawData.female);
+                            } else if (type === 'padang_acara') {
+                                const parseField = (arr) => (arr || []).map((r, i) => ({ order: r[0]||i+1, name: r[1]||'', house: r[3]||'', bib: r[4]||'', p1: r[5]||'', p2: r[6]||'', p3: r[7]||'', p4: r[8]||'', p5: r[9]||'', p6: r[10]||'', best: r[11]||'', rank: r[12]||'' }));
+                                dataset[sName].male = parseField(rawData.male);
+                                dataset[sName].female = parseField(rawData.female);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Fetch error for " + type, e);
+                }
+            };
+
+            await Promise.all([
+                fetchService(webAppUrlPadang, SARINGAN_SHEETS, 'padang'),
+                fetchService(webAppUrlBalapan, AKHIR_SHEETS, 'balapan'),
+                fetchService(webAppUrlRelay, RELAY_SHEETS, 'relay'),
+                fetchService(webAppUrlPadangAcara, PADANG_ACARA_SHEETS, 'padang_acara')
+            ]);
+
+            renderAllTables();
             updateStats();
+            
+            const lastUpdateEl = document.getElementById('statLastUpdate');
+            if (lastUpdateEl) lastUpdateEl.innerText = `Kemas kini: ${new Date().toLocaleTimeString()}`;
+
+            if (isManual) showToast("Data terkini daripada Google Sheets berjaya dimuat turun!", "success");
         }
 
         function updateStats() {
@@ -1657,7 +1777,9 @@ function getColLetter(colIndex) {
             });
 
             const leaderEl = document.getElementById('statLeader');
-            if (leaderEl) leaderEl.innerText = `Rumah ${leaderHouse} (${maxGold} Emas)`;
+            if (leaderEl) {
+                leaderEl.innerHTML = `Rumah <span class="${getHouseTextColor(leaderHouse)}">${leaderHouse}</span> (${maxGold} Emas)`;
+            }
         }
 
         function renderHouseStats() {
@@ -1665,10 +1787,10 @@ function getColLetter(colIndex) {
             if (!grid) return;
 
             const houses = [
-                { name: 'Garuda', color: 'border-rose-500 bg-rose-50/50 text-rose-600', dot: 'bg-rose-500' },
-                { name: 'Rajawali', color: 'border-blue-500 bg-blue-50/50 text-blue-600', dot: 'bg-blue-500' },
-                { name: 'Helang', color: 'border-emerald-500 bg-emerald-50/50 text-emerald-600', dot: 'bg-emerald-500' },
-                { name: 'Kenyalang', color: 'border-amber-400 bg-amber-50/50 text-amber-600', dot: 'bg-amber-400' }
+                { name: 'Garuda', color: 'border-red-500/80 bg-red-50/50 dark:bg-red-950/30 text-red-600 dark:text-red-400', dot: 'bg-red-500' },
+                { name: 'Rajawali', color: 'border-blue-500/80 bg-blue-50/50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400', dot: 'bg-blue-500' },
+                { name: 'Helang', color: 'border-emerald-500/80 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400', dot: 'bg-emerald-500' },
+                { name: 'Kenyalang', color: 'border-amber-400/80 bg-amber-50/50 dark:bg-amber-950/30 text-amber-500 dark:text-yellow-400', dot: 'bg-yellow-400' }
             ];
 
             const houseMedals = {
@@ -1704,24 +1826,24 @@ function getColLetter(colIndex) {
             grid.innerHTML = houses.map(h => {
                 const stats = houseMedals[h.name];
                 return `
-                    <div class="rounded-2xl p-3.5 sm:p-4 border-2 ${h.color} transition hover:shadow-md">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="font-bold text-xs sm:text-sm flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${h.dot}"></span>
+                    <div class="rounded-3xl p-4 sm:p-5 border-2 ${h.color} transition-all hover:shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="font-black text-xs sm:text-sm flex items-center gap-2 ${getHouseTextColor(h.name)}">
+                                <span class="w-3 h-3 rounded-full ${h.dot}"></span>
                                 Rumah ${h.name}
                             </span>
-                            <span class="text-[11px] sm:text-xs font-black bg-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border shadow-xs">
+                            <span class="text-[11px] sm:text-xs font-black bg-white dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shadow-xs">
                                 ${stats.points} Mata
                             </span>
                         </div>
-                        <div class="grid grid-cols-3 gap-1.5 sm:gap-2 text-center text-[11px] sm:text-xs">
-                            <div class="bg-amber-100/90 text-amber-900 rounded-xl p-1.5 sm:p-2 font-bold border border-amber-200/60">
+                        <div class="grid grid-cols-3 gap-2 text-center text-[11px] sm:text-xs">
+                            <div class="bg-amber-100/90 text-amber-900 rounded-2xl p-2 font-bold border border-amber-200/60 shadow-xs">
                                 🥇 <span class="block text-xs sm:text-sm font-black mt-0.5">${stats.gold}</span> Emas
                             </div>
-                            <div class="bg-slate-200/90 text-slate-800 rounded-xl p-1.5 sm:p-2 font-bold border border-slate-300/60">
+                            <div class="bg-slate-200/90 text-slate-800 rounded-2xl p-2 font-bold border border-slate-300/60 shadow-xs">
                                 🥈 <span class="block text-xs sm:text-sm font-black mt-0.5">${stats.silver}</span> Perak
                             </div>
-                            <div class="bg-amber-800/10 text-amber-950 rounded-xl p-1.5 sm:p-2 font-bold border border-amber-900/10">
+                            <div class="bg-amber-800/10 text-amber-950 dark:text-amber-200 rounded-2xl p-2 font-bold border border-amber-900/10 shadow-xs">
                                 🥉 <span class="block text-xs sm:text-sm font-black mt-0.5">${stats.bronze}</span> Gangsa
                             </div>
                         </div>
@@ -1750,6 +1872,7 @@ function getColLetter(colIndex) {
                 logActivity('Tetapan API', `Menyimpan URL Web App [${type}]`, 'Berjaya');
                 showToast(`URL Web App (${type}) berjaya disimpan!`, "success");
                 updateBadge();
+                fetchDataFromBackend(true);
             } else {
                 showToast("Sila masukkan URL Web App.", "error");
             }
@@ -1784,7 +1907,7 @@ function getColLetter(colIndex) {
             const input = document.getElementById(inputId);
 
             if (badge) {
-                badge.className = isSaved ? "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" : "text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800";
+                badge.className = isSaved ? "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800" : "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800";
                 badge.innerText = isSaved ? "Tersimpan" : "Belum Disimpan";
             }
             if (input) input.readOnly = isSaved;
@@ -1804,7 +1927,7 @@ function getColLetter(colIndex) {
 
             if (!url) {
                 if (resultDiv) {
-                    resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-rose-50 text-rose-700 border border-rose-200";
+                    resultDiv.className = "mt-2.5 text-xs p-3.5 rounded-2xl font-mono bg-rose-50 text-rose-700 border border-rose-200";
                     resultDiv.innerText = "Masukkan URL Web App dahulu.";
                     resultDiv.classList.remove('hidden');
                 }
@@ -1812,7 +1935,7 @@ function getColLetter(colIndex) {
             }
 
             if (resultDiv) {
-                resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-amber-50 text-amber-700 border border-amber-200";
+                resultDiv.className = "mt-2.5 text-xs p-3.5 rounded-2xl font-mono bg-amber-50 text-amber-700 border border-amber-200";
                 resultDiv.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Menguji sambungan ${type}...`;
                 resultDiv.classList.remove('hidden');
             }
@@ -1822,7 +1945,7 @@ function getColLetter(colIndex) {
                 const data = JSON.parse(await response.text());
                 if (data.status === 'success') {
                     if (resultDiv) {
-                        resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-emerald-50 text-emerald-800 border border-emerald-200";
+                        resultDiv.className = "mt-2.5 text-xs p-3.5 rounded-2xl font-mono bg-emerald-50 text-emerald-800 border border-emerald-200";
                         resultDiv.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> <b>Sambungan Berjaya!</b> Google Sheets merespon.`;
                     }
                     logActivity('Ujian API', `Sambungan API [${type}] berjaya`, 'Berjaya');
@@ -1831,7 +1954,7 @@ function getColLetter(colIndex) {
                 }
             } catch (err) {
                 if (resultDiv) {
-                    resultDiv.className = "mt-2 text-xs p-3 rounded-xl font-mono bg-rose-50 text-rose-800 border border-rose-200";
+                    resultDiv.className = "mt-2.5 text-xs p-3.5 rounded-2xl font-mono bg-rose-50 text-rose-800 border border-rose-200";
                     resultDiv.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i> <b>Sambungan Gagal:</b> ${err.message}`;
                 }
                 logActivity('Ujian API Gagal', `Sambungan API [${type}] gagal: ${err.message}`, 'Gagal');
@@ -1854,43 +1977,24 @@ function getColLetter(colIndex) {
             showToast(`Kod Apps Script (${type}) berjaya disalin!`, "success");
         }
 
-        function normalizeHouseName(name) {
-            if (!name) return '';
-            const n = name.toString().toLowerCase();
-            if (n.includes('garuda') || n.includes('merah')) return 'Garuda';
-            if (n.includes('rajawali') || n.includes('biru')) return 'Rajawali';
-            if (n.includes('helang') || n.includes('hijau')) return 'Helang';
-            if (n.includes('kenyalang') || n.includes('kuning')) return 'Kenyalang';
-            return name;
-        }
-
-        function getHouseTextColor(house) {
-            const norm = normalizeHouseName(house);
-            if (norm === 'Garuda') return 'text-rose-600 font-extrabold';
-            if (norm === 'Rajawali') return 'text-blue-600 font-extrabold';
-            if (norm === 'Helang') return 'text-emerald-600 font-extrabold';
-            if (norm === 'Kenyalang') return 'text-amber-600 font-extrabold';
-            return 'text-slate-700';
-        }
-
         function showToast(message, type = "info") {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const toast = document.createElement('div');
-            let bgStyle = "bg-slate-900 text-white border-slate-700";
+            let bgStyle = "bg-slate-900/95 text-white border-slate-700 shadow-xl backdrop-blur-md";
             let icon = "fa-info-circle text-blue-400";
 
             if (type === 'success') {
-                bgStyle = "bg-emerald-900 text-emerald-100 border-emerald-700";
+                bgStyle = "bg-emerald-950/95 text-emerald-100 border-emerald-700/80 shadow-glow-blue backdrop-blur-md";
                 icon = "fa-circle-check text-emerald-400";
             } else if (type === 'error') {
-                bgStyle = "bg-rose-950 text-rose-100 border-rose-800";
+                bgStyle = "bg-rose-950/95 text-rose-100 border-rose-800/80 shadow-xl backdrop-blur-md";
                 icon = "fa-circle-exclamation text-rose-400";
             }
 
-            toast.className = `p-3.5 rounded-2xl border shadow-xl text-xs flex items-center gap-3 transition-all transform translate-y-2 opacity-0 ${bgStyle}`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span class="font-semibold flex-grow">${message}</span>`;
+            toast.className = `p-4 rounded-2xl border shadow-2xl text-xs flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 ${bgStyle}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span class="font-bold flex-grow">${message}</span>`;
 
             container.appendChild(toast);
             setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 50);
@@ -1919,10 +2023,10 @@ function getColLetter(colIndex) {
             const activeServices = [webAppUrlPadang, webAppUrlBalapan, webAppUrlRelay, webAppUrlPadangAcara].filter(Boolean).length;
 
             if (activeServices > 0) {
-                badge.className = "hidden sm:flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-400 shadow-xs";
+                badge.className = "hidden sm:flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-400 shadow-sm backdrop-blur-sm";
                 badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>Live (${activeServices}/4)</span>`;
             } else {
-                badge.className = "hidden sm:flex items-center gap-1.5 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-400";
+                badge.className = "hidden sm:flex items-center gap-1.5 bg-slate-800/90 border border-slate-700/80 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-400 shadow-sm backdrop-blur-sm";
                 badge.innerHTML = `<i class="fa-solid fa-flask"></i><span>Mod Demo</span>`;
             }
         }
