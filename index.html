@@ -1053,9 +1053,15 @@ function getColLetter(colIndex) {
                     <i class="fa-solid fa-print text-blue-600 dark:text-blue-400 text-lg"></i>
                     <h3 class="font-black text-slate-900 dark:text-white text-base">Paparan & Cetakan Keputusan</h3>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="executeModalPrint()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95">
-                        <i class="fa-solid fa-print mr-1"></i> Cetak / Simpan PDF
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="copyPrintTableToClipboard()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+                        <i class="fa-regular fa-copy"></i> Salin Keputusan
+                    </button>
+                    <button onclick="downloadPrintDocument()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-arrow-down"></i> Muat Turun Fail
+                    </button>
+                    <button onclick="executeModalPrint()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
                     </button>
                     <button onclick="closePrintModalFallback()" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
                         <i class="fa-solid fa-xmark text-lg"></i>
@@ -1151,11 +1157,85 @@ function getColLetter(colIndex) {
         }
 
         function executeModalPrint() {
+            let directPrintTriggered = false;
             try {
-                window.print();
+                if (window.self === window.top) {
+                    window.print();
+                    directPrintTriggered = true;
+                }
             } catch (e) {
-                showToast("Fungsi cetak pelayar disekat. Anda boleh menyalin atau mengambil tangkapan skrin paparan ini.", "info");
+                console.warn("Direct window.print() suppressed by iframe sandbox:", e);
             }
+
+            if (!directPrintTriggered) {
+                downloadPrintDocument();
+            }
+        }
+
+        function downloadPrintDocument() {
+            const bodyContent = document.getElementById('printModalFallbackBody')?.innerHTML || '';
+            const fullHtml = `<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Keputusan Rasmi Kejohanan</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 25px; color: #000; background: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; }
+        th, td { border: 1px solid #475569; padding: 6px 10px; text-align: left; font-size: 12px; }
+        thead { background-color: #f1f5f9; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: bold; }
+        input { border: none; background: transparent; text-align: center; font-weight: bold; width: 100%; font-size: 12px; }
+        .no-print { display: none !important; }
+        .grid { display: block !important; }
+        .grid > div { margin-bottom: 20px !important; }
+    </style>
+</head>
+<body>
+    ${bodyContent}
+    <script>
+        window.onload = function() {
+            setTimeout(function() { window.print(); }, 300);
+        };
+    <\/script>
+</body>
+</html>`;
+
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Attempt opening standalone window outside iframe sandbox
+            const standaloneWin = window.open(blobUrl, '_blank');
+            if (!standaloneWin) {
+                // If popups are blocked, download HTML file directly
+                const downloadLink = document.createElement('a');
+                downloadLink.href = blobUrl;
+                downloadLink.download = `Keputusan_Rasmi_${currentMainTab}_${new Date().getTime()}.html`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                showToast("Fail dokumen keputusan telah dimuat turun. Buka fail untuk cetak/simpan PDF.", "success");
+            } else {
+                showToast("Dokumen dibuka di tab baharu untuk dicetak.", "success");
+            }
+        }
+
+        function copyPrintTableToClipboard() {
+            const bodyEl = document.getElementById('printModalFallbackBody');
+            if (!bodyEl) return;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = bodyEl.innerText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Teks keputusan berjaya disalin ke clipboard!", "success");
+            } catch (err) {
+                showToast("Gagal menyalin teks keputusan.", "error");
+            }
+            document.body.removeChild(tempTextArea);
         }
 
         function closePrintModalFallback() {
