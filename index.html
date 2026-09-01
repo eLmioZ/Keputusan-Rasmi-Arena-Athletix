@@ -1050,18 +1050,12 @@ function getColLetter(colIndex) {
         <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-4xl w-full mx-auto p-6 shadow-2xl border border-slate-200 dark:border-slate-800 my-auto flex flex-col max-h-[90vh]">
             <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-4">
                 <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-print text-blue-600 dark:text-blue-400 text-lg"></i>
-                    <h3 class="font-black text-slate-900 dark:text-white text-base">Paparan & Cetakan Keputusan</h3>
+                    <i class="fa-solid fa-file-arrow-down text-blue-600 dark:text-blue-400 text-lg"></i>
+                    <h3 class="font-black text-slate-900 dark:text-white text-base">Paparan & Muat Turun Keputusan</h3>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="copyPrintTableToClipboard()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
-                        <i class="fa-regular fa-copy"></i> Salin Keputusan
-                    </button>
                     <button onclick="downloadPrintDocument()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
                         <i class="fa-solid fa-file-arrow-down"></i> Muat Turun Fail
-                    </button>
-                    <button onclick="executeModalPrint()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1.5">
-                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
                     </button>
                     <button onclick="closePrintModalFallback()" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
                         <i class="fa-solid fa-xmark text-lg"></i>
@@ -1127,17 +1121,8 @@ function getColLetter(colIndex) {
             const activeEl = document.getElementById(activeContainerId);
             const contentHtml = activeEl ? activeEl.innerHTML : '';
 
-            // 4. Always show the Print Preview Modal to guarantee instant UI feedback in sandboxed viewports
+            // 4. Show the Download Preview Modal
             showPrintModalFallback(contentHtml, subText, nowStr);
-
-            // 5. Try direct window.print() if not sandboxed
-            try {
-                if (window.self === window.top) {
-                    window.print();
-                }
-            } catch (err) {
-                console.warn("Direct window.print() suppressed by browser sandbox:", err);
-            }
         }
 
         function showPrintModalFallback(htmlContent, subText, nowStr) {
@@ -1154,22 +1139,6 @@ function getColLetter(colIndex) {
                 <div>${htmlContent}</div>
             `;
             fallbackModal.classList.remove('hidden');
-        }
-
-        function executeModalPrint() {
-            let directPrintTriggered = false;
-            try {
-                if (window.self === window.top) {
-                    window.print();
-                    directPrintTriggered = true;
-                }
-            } catch (e) {
-                console.warn("Direct window.print() suppressed by iframe sandbox:", e);
-            }
-
-            if (!directPrintTriggered) {
-                downloadPrintDocument();
-            }
         }
 
         function downloadPrintDocument() {
@@ -1219,23 +1188,6 @@ function getColLetter(colIndex) {
             } else {
                 showToast("Dokumen dibuka di tab baharu untuk dicetak.", "success");
             }
-        }
-
-        function copyPrintTableToClipboard() {
-            const bodyEl = document.getElementById('printModalFallbackBody');
-            if (!bodyEl) return;
-
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = bodyEl.innerText;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            try {
-                document.execCommand('copy');
-                showToast("Teks keputusan berjaya disalin ke clipboard!", "success");
-            } catch (err) {
-                showToast("Gagal menyalin teks keputusan.", "error");
-            }
-            document.body.removeChild(tempTextArea);
         }
 
         function closePrintModalFallback() {
@@ -2306,5 +2258,3 @@ function getColLetter(colIndex) {
     </script>
 </body>
 </html>
-
-"v1.3.0"
